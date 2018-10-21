@@ -1,15 +1,15 @@
 CREATE DATABASE  IF NOT EXISTS `step_forum_db` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `step_forum_db`;
--- MySQL dump 10.13  Distrib 8.0.11, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: step_forum_db
 -- ------------------------------------------------------
--- Server version	8.0.11
+-- Server version	5.7.19-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
- SET NAMES utf8 ;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,7 +23,7 @@ USE `step_forum_db`;
 
 DROP TABLE IF EXISTS `action`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `action` (
   `id_action` int(11) NOT NULL AUTO_INCREMENT,
   `action_type` varchar(45) DEFAULT NULL,
@@ -46,10 +46,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `comment` (
   `id_comment` int(11) NOT NULL AUTO_INCREMENT,
-  `describtion` text,
+  `description` text,
   `write_date` datetime DEFAULT NULL,
   `id_topic` int(11) DEFAULT NULL,
   `id_user` int(11) DEFAULT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE `comment` (
   KEY `fk_comment_topic_idx` (`id_topic`),
   CONSTRAINT `fk_comment_topic` FOREIGN KEY (`id_topic`) REFERENCES `topic` (`id_topic`),
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,6 +67,7 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
+INSERT INTO `comment` VALUES (1,'yes','2018-10-23 00:00:00',1,1),(2,'no','2018-10-22 00:00:00',2,2),(3,'okay','2018-10-24 00:00:00',3,2),(4,'thanks','2018-11-02 00:00:00',3,3);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -76,7 +77,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role` (
   `id_role` int(11) NOT NULL AUTO_INCREMENT,
   `role_type` varchar(45) DEFAULT NULL,
@@ -100,7 +101,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `role_action`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role_action` (
   `id_role_action` int(11) NOT NULL AUTO_INCREMENT,
   `id_role` int(11) DEFAULT NULL,
@@ -128,7 +129,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `topic`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `topic` (
   `id_topic` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -139,7 +140,7 @@ CREATE TABLE `topic` (
   PRIMARY KEY (`id_topic`),
   KEY `fk_topic_user_idx` (`id_user`),
   CONSTRAINT `fk_topic_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,6 +149,7 @@ CREATE TABLE `topic` (
 
 LOCK TABLES `topic` WRITE;
 /*!40000 ALTER TABLE `topic` DISABLE KEYS */;
+INSERT INTO `topic` VALUES (1,'TOPIC 1','qwqwqwwqwqwqwqwqwqwwqwqw','2018-10-21 00:00:00',94,1),(2,'TOPIC 2','sasasasasasasassasasasasassasasa','2018-10-19 00:00:00',67,2),(3,'TOPIC 3','zxzxzxxzxzxzxzxzxzxxzxzxzxzxxz','2016-10-18 00:00:00',568,3);
 /*!40000 ALTER TABLE `topic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,13 +159,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id_user` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(45) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
-  `firstname` varchar(45) DEFAULT NULL,
-  `lastname` varchar(45) DEFAULT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
   `token` varchar(100) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `id_role` int(11) DEFAULT NULL,
@@ -171,7 +173,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `fk_user_role_idx` (`id_role`),
   CONSTRAINT `fk_user_role` FOREIGN KEY (`id_role`) REFERENCES `role` (`id_role`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,6 +182,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'senan0144@gmail.com','senan0144','senan','kazimov','hdhdh623626',1,1),(2,'elman0144@gmail.com','elman0144','elman','gahramanov','jsjs8383',1,1),(3,'aslan0144@gmail.com','aslan0144','aslan','sirmemmedov','kgkgkg84848',2,2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -192,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-20 18:29:56
+-- Dump completed on 2018-10-21 12:38:05

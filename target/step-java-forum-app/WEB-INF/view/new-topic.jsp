@@ -77,7 +77,7 @@
                                         </div>
                                     </div>
                                     <div class="posttext pull-left">
-                                        <h2><a href="02_topic.jsp">10 Kids Unaware of Their Halloween Costume</a></h2>
+                                        <h2><a href="topic.jsp">10 Kids Unaware of Their Halloween Costume</a></h2>
                                         <p>It's one thing to subject yourself to a Halloween costume mishap because, hey, that's your prerogative.</p>
                                     </div>
                                     <div class="clearfix"></div>
@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                     <div class="posttext pull-left">
-                                        <h2><a href="02_topic.jsp">10 Kids Unaware of Their Halloween Costume</a></h2>
+                                        <h2><a href="topic.jsp">10 Kids Unaware of Their Halloween Costume</a></h2>
                                         <p>It's one thing to subject yourself to a Halloween costume mishap because, hey, that's your prerogative.</p>
                                     </div>
                                     <div class="clearfix"></div>
@@ -146,5 +146,5 @@
 
     </body>
 
-<!-- Mirrored from forum.azyrusthemes.com/03_new_topic.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Oct 2018 07:34:53 GMT -->
+<!-- Mirrored from forum.azyrusthemes.com/new-topic.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Oct 2018 07:34:53 GMT -->
 </html>
