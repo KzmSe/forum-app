@@ -24,34 +24,36 @@
                     <div class="row">
                         <div class="col-lg-8 col-md-8">
 
-                            <!-- POST -->
-                            <div class="post">
-                                <div class="wrap-ut pull-left">
-                                    <div class="userinfo pull-left">
-                                        <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" />
+                            <c:forEach var="topic" items="${topicList}">
+                                <!-- POST -->
+                                <div class="post">
+                                    <div class="wrap-ut pull-left">
+                                        <div class="userinfo pull-left">
+                                            <div class="avatar">
+                                                <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="${topic.user.firstname} ${topic.user.lastname}" title="${topic.user.firstname} ${topic.user.lastname}"/>
+                                            </div>
                                         </div>
+                                        <div class="posttext pull-left">
+                                            <h2><a href="${pageContext.request.contextPath}/ns?action=topic&id=${topic.id}">${topic.title}</a></h2>
+                                            <p>${topic.description}</p>
+                                        </div>
+                                        <div class="clearfix"></div>
                                     </div>
-                                    <div class="posttext pull-left">
-                                        <h2><a href="${pageContext.request.contextPath}/ns?action=topic">10 Kids Unaware of Their Halloween Costume</a></h2>
-                                        <p>It's one thing to subject yourself to a Halloween costume mishap because, hey, that's your prerogative.</p>
+                                    <div class="postinfo pull-left">
+                                        <div class="comments">
+                                            <div class="commentbg">
+                                                ${topic.commentList.size()}
+                                                <div class="mark"></div>
+                                            </div>
+
+                                        </div>
+                                        <div class="views"><i class="fa fa-eye"></i>${topic.viewCount}</div>
+                                        <div class="time"><i class="fa fa-clock-o"></i> 24 min</div>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
-                                <div class="postinfo pull-left">
-                                    <div class="comments">
-                                        <div class="commentbg">
-                                            560
-                                            <div class="mark"></div>
-                                        </div>
-
-                                    </div>
-                                    <div class="views"><i class="fa fa-eye"></i> 1,568</div>
-                                    <div class="time"><i class="fa fa-clock-o"></i> 24 min</div>                                    
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <!-- POST -->
+                                <!-- POST -->
+                            </c:forEach>
 
                         </div>
 
@@ -67,6 +69,7 @@
             <footer>
                 <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-footer.jsp"></c:import>
             </footer>
+
         </div>
 
     </body>

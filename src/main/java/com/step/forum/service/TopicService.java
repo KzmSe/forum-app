@@ -1,10 +1,10 @@
-package com.step.forum.dao;
+package com.step.forum.service;
 
 import com.step.forum.model.Topic;
 
 import java.util.List;
 
-public interface TopicDao {
+public interface TopicService {
 
     List<Topic> getAllTopic();
 

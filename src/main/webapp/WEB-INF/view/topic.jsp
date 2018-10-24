@@ -30,20 +30,20 @@
                                 <div class="topwrap">
                                     <div class="userinfo pull-left">
                                         <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" />
+                                            <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="${topic.user.firstname} ${topic.user.lastname}" title="${topic.user.firstname} ${topic.user.lastname}"/>
                                         </div>
 
                                     </div>
                                     <div class="posttext pull-left">
-                                        <h2>10 Kids Unaware of Their Halloween Costume</h2>
-                                        <p>Today, we're looking at three particularly interesting stories. Pinterest added a new location-based feature on Wednesday that uses Place Pins as a way to map out vacations and favorite areas. Southwest Airlines is providing Wi-Fi access from gate to gate for $8 per day through an onboard hotspot. And in an effort to ramp up its user base, Google Wallet is offering a debit card that can take out cash from.</p>
+                                        <h2>${topic.title}</h2>
+                                        <p>${topic.description}</p>
                                     </div>
                                     <div class="clearfix"></div>
-                                </div>                              
+                                </div>
                                 <div class="postinfobot">
 
-                                    <div class="posted pull-left"><i class="fa fa-clock-o"></i> Posted on : 20 Nov @ 9:30am</div>
-                                    <div class="posted pull-left"> Posted by : Maria Kenny</div>
+                                    <div class="posted pull-left"><i class="fa fa-clock-o"></i> Posted on : ${topic.shareDate}</div>
+                                    <div class="posted pull-left"> Posted by : ${topic.user.firstname} ${topic.user.lastname}</div>
                                     <div class="posted pull-left"><i class="fa fa-trash-o"></i></div>
 
                                     <div class="clearfix"></div>
@@ -53,54 +53,33 @@
 
                   
 
-                            <!-- COMMENT -->
-                            <div class="post">
-                                <div class="topwrap">
-                                    <div class="userinfo pull-left">
-                                        <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar2.jpg" alt=""/>
+                            <c:forEach var="comment" items="${topic.commentList}">
+                                <!-- COMMENT -->
+                                <div class="post">
+                                    <div class="topwrap">
+                                        <div class="userinfo pull-left">
+                                            <div class="avatar">
+                                                <img src="${pageContext.request.contextPath}/resources/images/avatar2.jpg" alt="${comment.user.firstname} ${comment.user.lastname}" title="${comment.user.firstname} ${comment.user.lastname}"/>
+                                            </div>
+
                                         </div>
-
-                                    </div>
-                                    <div class="posttext pull-left">
-                                        <p>Typography helps you engage your audience and establish a distinct, unique personality on your website. Knowing how to use fonts to build character in your design is a powerful skill, and exploring the history and use of typefaces, as well as typogra...</p>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>                              
-                                <div class="postinfobot">
-
-                                    <div class="posted pull-left"><i class="fa fa-clock-o"></i> Posted on : 20 Nov @ 9:45am</div>
-                                    <div class="posted pull-left"> John McRon</div>
-                                    <div class="posted pull-left"><i class="fa fa-trash-o"></i></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <!-- COMMENT -->
-
-
-                            <!-- COMMENT -->
-                            <div class="post">
-                                <div class="topwrap">
-                                    <div class="userinfo pull-left">
-                                        <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar2.jpg" alt=""/>
+                                        <div class="posttext pull-left">
+                                            <p>${comment.description}</p>
                                         </div>
-
+                                        <div class="clearfix"></div>
                                     </div>
-                                    <div class="posttext pull-left">
-                                        <p>Typography helps you engage your audience and establish a distinct, unique personality on your website. Knowing how to use fonts to build character in your design is a powerful skill, and exploring the history and use of typefaces, as well as typogra...</p>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>                              
-                                <div class="postinfobot">
+                                    <div class="postinfobot">
 
-                                    <div class="posted pull-left"><i class="fa fa-clock-o"></i> Posted on : 20 Nov @ 9:45am</div>
-                                    <div class="posted pull-left"> John McRon</div>
-                                    <div class="posted pull-left"><i class="fa fa-trash-o"></i></div>
-                                    <div class="clearfix"></div>
+                                        <div class="posted pull-left"><i class="fa fa-clock-o"></i> Posted on : ${comment.writeDate}</div>
+                                        <div class="posted pull-left"> ${comment.user.firstname} ${comment.user.lastname}</div>
+                                        <div class="posted pull-left"><i class="fa fa-trash-o"></i></div>
+                                        <div class="clearfix"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- COMMENT -->
+                                <!-- COMMENT -->
+                            </c:forEach>
+
+
 
                             <br><br>
 

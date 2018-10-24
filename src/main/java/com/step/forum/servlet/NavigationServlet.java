@@ -1,5 +1,10 @@
 package com.step.forum.servlet;
 
+import com.step.forum.dao.TopicDaoImpl;
+import com.step.forum.model.Topic;
+import com.step.forum.service.TopicService;
+import com.step.forum.service.TopicServiceImpl;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +14,8 @@ import java.io.IOException;
 
 @WebServlet(name = "NavigationServlet", urlPatterns = "/ns")
 public class NavigationServlet extends HttpServlet {
+
+    private TopicService topicService = new TopicServiceImpl(new TopicDaoImpl());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -41,6 +48,12 @@ public class NavigationServlet extends HttpServlet {
 
 
         } else if (action.equals("topic")) {
+            int idTopic = Integer.parseInt(request.getParameter("id"));
+            Topic topic = topicService.getTopicById(idTopic);
+
+            if (topic != null) {
+                request.setAttribute("topic", topic);
+            }
             address = "/WEB-INF/view/topic.jsp";
 
         }
