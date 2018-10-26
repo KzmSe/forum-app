@@ -1,5 +1,6 @@
 package com.step.forum.model;
 
+import com.step.forum.util.TimeUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;

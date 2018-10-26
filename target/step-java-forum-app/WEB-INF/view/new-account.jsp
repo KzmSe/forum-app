@@ -35,7 +35,8 @@
 
                             <!-- POST -->
                             <div class="post">
-                                <form action="#" class="form newtopic" method="post">
+                                <form action="us" class="form newtopic" method="POST">
+                                    <input type="hidden" name="action" value="doRegister">
                                     <div class="postinfotop">
                                         <h2>Create New Account</h2>
                                     </div>
@@ -54,21 +55,21 @@
                                             <div class="posttext pull-left">
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6">
-                                                        <input type="text" placeholder="First Name" class="form-control" />
+                                                        <input type="text" placeholder="First Name" class="form-control" name="firstname"/>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6">
-                                                        <input type="text" placeholder="Last Name" class="form-control" />
+                                                        <input type="text" placeholder="Last Name" class="form-control" name="lastname"/>
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <input type="text" placeholder="User Name" class="form-control" />
+                                                    <input type="text" placeholder="Email" class="form-control" name="email"/>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6">
-                                                        <input type="password" placeholder="Password" class="form-control" id="pass" name="pass" />
+                                                        <input type="password" placeholder="Password" class="form-control" name="password"/>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6">
-                                                        <input type="password" placeholder="Retype Password" class="form-control" id="pass2" name="pass2" />
+                                                        <input type="password" placeholder="Retype Password" class="form-control" name="rePassword"/>
                                                     </div>
                                                 </div>
 
@@ -110,6 +111,14 @@
                   <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-footer.jsp"></c:import>
             </footer>
         </div>
+
+        <script type="text/javascript">
+            $(function () {
+                <c:if test="${message ne null}">
+                alert('${message}');
+                </c:if>
+            });
+        </script>
 
     </body>
 

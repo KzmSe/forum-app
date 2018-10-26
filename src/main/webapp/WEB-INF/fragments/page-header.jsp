@@ -27,7 +27,7 @@
                     <a data-toggle="dropdown" href="#"><img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" /></a> <b class="caret"></b>
                     <ul class="dropdown-menu" role="menu">
                         <li role="presentation"><a role="menuitem" tabindex="-3" href="#">Log Out</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-4" href="04_new_account.jsp">Create account</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-4" href="/ns?action=register">Create account</a></li>
                     </ul>
                 </div>
 

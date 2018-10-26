@@ -56,6 +56,12 @@ public class NavigationServlet extends HttpServlet {
             }
             address = "/WEB-INF/view/topic.jsp";
 
+        } else if (action.equals("register")) {
+            address = "/WEB-INF/view/new-account.jsp";
+
+        } else if (action.equals("login")) {
+            address = "/WEB-INF/view/login.jsp";
+
         }
 
 
