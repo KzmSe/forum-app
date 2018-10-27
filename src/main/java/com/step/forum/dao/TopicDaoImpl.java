@@ -15,6 +15,8 @@ public class TopicDaoImpl implements TopicDao {
 
     private final String GET_ALL_TOPIC_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic order by t.share_date desc";
     private final String GET_TOPIC_BY_ID_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date, us.id_user as id_user_comment, us.first_name as first_name_comment, us.last_name as last_name_comment from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic left join user us on us.id_user = c.id_user where t.id_topic = ?";
+    private final static String INCREMENT_TOPIC_VIEW_COUNT_SQL = "update topic set view_count = view_count + 1 where id_topic = ?";
+    private final static String ADD_TOPIC_SQL = "insert into topic(title, description, share_date, view_count, id_user) values(?,?,?,?,?);";
 
     @Override
     public List<Topic> getAllTopic() {
@@ -131,6 +133,58 @@ public class TopicDaoImpl implements TopicDao {
         }
 
         return topic;
+    }
+
+    @Override
+    public boolean incrementTopicViewCount(int id) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        boolean result = false;
+
+        try {
+            con = DbUtil.getConnection();
+            ps = con.prepareStatement(INCREMENT_TOPIC_VIEW_COUNT_SQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+            result = true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            DbUtil.closeAll(con, ps);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean addTopic(Topic topic) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        boolean result = false;
+
+        try {
+            con = DbUtil.getConnection();
+            ps = con.prepareStatement(ADD_TOPIC_SQL);
+            ps.setString(1, topic.getTitle());
+            ps.setString(2, topic.getDescription());
+            ps.setString(3, topic.getShareDate().toString());
+            ps.setInt(4, topic.getViewCount());
+            ps.setInt(5, topic.getUser().getId());
+            ps.executeUpdate();
+
+            result = true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            DbUtil.closeAll(con, ps);
+        }
+
+        return result;
     }
 
 

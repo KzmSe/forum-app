@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="headernav">
@@ -16,23 +17,44 @@
                     </form>
                 </div>
             </div>
-            <div class="col-lg-4 col-xs-12 col-sm-5 col-md-4 avt">
-                <div class="stnt pull-left">
-                    <form action="${pageContext.request.contextPath}/ns?action=newTopic" method="post" class="form">
-                        <button class="btn btn-primary" type="submit">Start New Topic</button>
-                    </form>
-                </div>
 
-                <div class="avatar pull-left dropdown">
-                    <a data-toggle="dropdown" href="#"><img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" /></a> <b class="caret"></b>
-                    <ul class="dropdown-menu" role="menu">
-                        <li role="presentation"><a role="menuitem" tabindex="-3" href="#">Log Out</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-4" href="/ns?action=register">Create account</a></li>
-                    </ul>
-                </div>
 
-                <div class="clearfix"></div>
-            </div>
+            <c:choose>
+                <c:when test="${sessionScope.user eq null}">
+                    <div class="col-lg-4 col-xs-12 col-sm-5 col-md-4 avt">
+                        <div class="stnt pull-left">
+                            <form action="${pageContext.request.contextPath}/ns?action=login" method="post" class="form">
+                                <button class="btn btn-primary" type="submit">Sign in</button>
+                            </form>
+                        </div>
+
+                        <div class="avatar pull-left dropdown">
+                            <form action="${pageContext.request.contextPath}/ns?action=register" method="post" class="form">
+                                <button class="btn btn-primary" type="submit">Sign up</button>
+                            </form>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="col-lg-4 col-xs-12 col-sm-5 col-md-4 avt">
+                        <div class="stnt pull-left">
+                            <form action="${pageContext.request.contextPath}/ns?action=newTopic" method="post" class="form">
+                                <button class="btn btn-primary" type="submit">Start New Topic</button>
+                            </form>
+                        </div>
+
+                        <div class="avatar pull-left dropdown">
+                            <a data-toggle="dropdown" href="#"><img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" /></a> <b class="caret"></b>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="presentation"><a role="menuitem" tabindex="-3" href="${pageContext.request.contextPath}/ns?action=logout">Log Out</a></li>
+                            </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
         </div>
     </div>
 </div>

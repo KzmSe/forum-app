@@ -29,7 +29,7 @@
 
                             <!-- POST -->
                             <div class="post">
-                                <form action="#" class="form newtopic" method="post">
+                                <form action="${pageContext.request.contextPath}/ts?action=addTopic" class="form newtopic" method="post">
                                     <div class="topwrap">
                                         <div class="userinfo pull-left">
                                             <div class="avatar">
@@ -39,12 +39,12 @@
                                         <div class="posttext pull-left">
 
                                             <div>
-                                                <input type="text" placeholder="Enter Topic Title" class="form-control" />
+                                                <input type="text" placeholder="Enter Topic Title" name="title" class="form-control" />
                                             </div>
 
 
                                             <div>
-                                                <textarea name="desc" id="desc" placeholder="Description"  class="form-control" ></textarea>
+                                                <textarea name="description" placeholder="Description"  class="form-control" ></textarea>
                                             </div>
 
                                         </div>

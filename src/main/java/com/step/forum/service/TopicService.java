@@ -10,4 +10,8 @@ public interface TopicService {
 
     Topic getTopicById(int id);
 
+    boolean incrementTopicViewCount(int id);
+
+    boolean addTopic(Topic topic);
+
 }

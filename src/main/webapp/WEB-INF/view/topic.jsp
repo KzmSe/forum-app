@@ -83,38 +83,40 @@
 
                             <br><br>
 
-                            <!-- REPLY -->
-                            <div class="post">
-                                <form action="#" class="form" method="post">
-                                    <div class="topwrap">
-                                        <div class="userinfo pull-left">
-                                            <div class="avatar">
-                                                <img src="${pageContext.request.contextPath}/resources/images/avatar4.jpg" alt="" />
+                            <c:if test="${sessionScope.user ne null}">
+                                <!-- REPLY -->
+                                <div class="post">
+                                    <form action="#" class="form" method="post">
+                                        <div class="topwrap">
+                                            <div class="userinfo pull-left">
+                                                <div class="avatar">
+                                                    <img src="${pageContext.request.contextPath}/resources/images/avatar4.jpg" alt="" />
+                                                </div>
+
                                             </div>
-
-                                        </div>
-                                        <div class="posttext pull-left">
-                                            <div class="textwraper">
-                                                <div class="postreply">Post a Reply</div>
-                                                <textarea name="reply" id="reply" placeholder="Type your message here"></textarea>
+                                            <div class="posttext pull-left">
+                                                <div class="textwraper">
+                                                    <div class="postreply">Post a Reply</div>
+                                                    <textarea name="reply" id="reply" placeholder="Type your message here"></textarea>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>                              
-                                    <div class="postinfobot">
-
-
-                                        <div class="pull-right postreply">
-                                            <div class="pull-left"><button type="submit" class="btn btn-primary">Post Reply</button></div>
                                             <div class="clearfix"></div>
                                         </div>
+                                        <div class="postinfobot">
 
 
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- REPLY -->
+                                            <div class="pull-right postreply">
+                                                <div class="pull-left"><button type="submit" class="btn btn-primary">Post Reply</button></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+
+
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- REPLY -->
+                            </c:if>
 
 
                         </div>

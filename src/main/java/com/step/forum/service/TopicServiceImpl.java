@@ -22,4 +22,14 @@ public class TopicServiceImpl implements TopicService {
     public Topic getTopicById(int id) {
         return topicDao.getTopicById(id);
     }
+
+    @Override
+    public boolean incrementTopicViewCount(int id) {
+        return topicDao.incrementTopicViewCount(id);
+    }
+
+    @Override
+    public boolean addTopic(Topic topic) {
+        return topicDao.addTopic(topic);
+    }
 }
