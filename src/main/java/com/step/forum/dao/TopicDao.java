@@ -14,4 +14,6 @@ public interface TopicDao {
 
     boolean addTopic(Topic topic);
 
+    List<Topic> getPopularTopics();
+
 }

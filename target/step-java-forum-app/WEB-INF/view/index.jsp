@@ -48,7 +48,7 @@
 
                                         </div>
                                         <div class="views"><i class="fa fa-eye"></i>${topic.viewCount}</div>
-                                        <div class="time"><i class="fa fa-clock-o"></i> 24 min</div>
+                                        <div class="time"><i class="fa fa-clock-o"></i> ${topic.getAgeOf()}</div>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

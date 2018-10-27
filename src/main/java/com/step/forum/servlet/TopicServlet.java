@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @WebServlet(name = "TopicServlet", urlPatterns = "/ts")
 public class TopicServlet extends HttpServlet {
@@ -38,6 +39,9 @@ public class TopicServlet extends HttpServlet {
 
         if (request.getParameter("action") != null) {
             action = request.getParameter("action");
+        } else {
+            response.sendRedirect("/");
+            return;
         }
 
         if (action.equals("addTopic")) {
@@ -61,8 +65,10 @@ public class TopicServlet extends HttpServlet {
             if (!resultAddTopic) {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
                 request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
-                //TODO: new topic sehifesinde alert yazilmalidir
             }
+        } else if (action.equals("getPopularTopics")) {
+            List<Topic> list = topicService.getPopularTopics();
+            //TODO: json-a cevirib page-right-menu ya gondermek..
 
         }
 

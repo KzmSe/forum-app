@@ -144,6 +144,14 @@
 
         </div>
 
+        <script type="text/javascript">
+            $(function () {
+                <c:if test="${message ne null}">
+                alert('${message}');
+                </c:if>
+            });
+        </script>
+
     </body>
 
 <!-- Mirrored from forum.azyrusthemes.com/new-topic.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Oct 2018 07:34:53 GMT -->

@@ -14,4 +14,6 @@ public interface TopicService {
 
     boolean addTopic(Topic topic);
 
+    List<Topic> getPopularTopics();
+
 }

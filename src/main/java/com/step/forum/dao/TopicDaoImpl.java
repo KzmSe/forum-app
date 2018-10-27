@@ -17,6 +17,7 @@ public class TopicDaoImpl implements TopicDao {
     private final String GET_TOPIC_BY_ID_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date, us.id_user as id_user_comment, us.first_name as first_name_comment, us.last_name as last_name_comment from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic left join user us on us.id_user = c.id_user where t.id_topic = ?";
     private final static String INCREMENT_TOPIC_VIEW_COUNT_SQL = "update topic set view_count = view_count + 1 where id_topic = ?";
     private final static String ADD_TOPIC_SQL = "insert into topic(title, description, share_date, view_count, id_user) values(?,?,?,?,?);";
+    private final static String GET_POPULAR_TOPICS_SQL = "select t.id_topic, t.title, count(c.id_comment) as comments from topic t left join comment c on t.id_topic = c.id_topic group by t.title having comments > ? order by comments desc limit ?";
 
     @Override
     public List<Topic> getAllTopic() {
@@ -186,6 +187,41 @@ public class TopicDaoImpl implements TopicDao {
 
         return result;
     }
+
+    @Override
+    public List<Topic> getPopularTopics() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Topic> list = new LinkedList<>();
+
+        try {
+            con = DbUtil.getConnection();
+            ps = con.prepareStatement(GET_POPULAR_TOPICS_SQL);
+            ps.setInt(1, 0);
+            ps.setInt(2, 7);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Topic topic = new Topic();
+                topic.setId(rs.getInt("id_topic"));
+                topic.setTitle(rs.getString("title"));
+                topic.setCommentsCount(rs.getInt("comments"));
+
+                list.add(topic);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            DbUtil.closeAll(con, ps, rs);
+        }
+
+        return list;
+    }
+
+
 
 
 }

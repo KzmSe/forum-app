@@ -6,7 +6,7 @@
               maxIdle="30"
               maxWait="10000"
               username="root"
-              password="admin"
+              password="6771"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/step_forum_db"/>
 </Context>

@@ -14,6 +14,7 @@ public class Topic {
     private String description;
     private LocalDateTime shareDate;
     private int viewCount;
+    private int commentsCount;
     private User user;
     private List<Comment> commentList;
 
@@ -61,6 +62,14 @@ public class Topic {
         this.viewCount = viewCount;
     }
 
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
     public User getUser() {
         return user;
     }
@@ -92,5 +101,9 @@ public class Topic {
 
     public void addComment(Comment comment) {
         commentList.add(comment);
+    }
+
+    public String getAgeOf() {
+        return TimeUtil.ageOf(shareDate);
     }
 }
