@@ -1,11 +1,13 @@
 package com.step.forum.servlet;
 
+import com.mysql.cj.xdevapi.JsonArray;
 import com.step.forum.constants.MessageConstants;
 import com.step.forum.dao.TopicDaoImpl;
 import com.step.forum.model.Topic;
 import com.step.forum.model.User;
 import com.step.forum.service.TopicService;
 import com.step.forum.service.TopicServiceImpl;
+import org.json.JSONArray;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -62,13 +64,19 @@ public class TopicServlet extends HttpServlet {
 
             boolean resultAddTopic = topicService.addTopic(topic);
 
-            if (!resultAddTopic) {
+            if (resultAddTopic) {
+                request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_TOPIC_ADDED);
+                request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
+            } else {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
                 request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
             }
+
         } else if (action.equals("getPopularTopics")) {
             List<Topic> list = topicService.getPopularTopics();
-            //TODO: json-a cevirib page-right-menu ya gondermek..
+            JSONArray jsonArray = new JSONArray(list);
+            response.setContentType("application/json");
+            response.getWriter().write(jsonArray.toString());
 
         }
 
