@@ -16,4 +16,6 @@ public interface TopicService {
 
     List<Topic> getPopularTopics();
 
+    List<Topic> getAllTopicsByUserId(int id);
+
 }

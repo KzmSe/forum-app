@@ -37,4 +37,9 @@ public class TopicServiceImpl implements TopicService {
     public List<Topic> getPopularTopics() {
         return topicDao.getPopularTopics();
     }
+
+    @Override
+    public List<Topic> getAllTopicsByUserId(int id) {
+        return topicDao.getAllTopicsByUserId(id);
+    }
 }

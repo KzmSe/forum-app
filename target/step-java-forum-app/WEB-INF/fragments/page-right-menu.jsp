@@ -10,10 +10,26 @@
             success: function (topicList) {
                 $('#idPopularTopics').empty();
                 topicList.forEach(function (topic) {
-                    $('#idPopularTopics').append('<li><a href="/ns?action=topic&id='+topic.id+'">topic.title<span class="badge pull-right">'+topic.commentsCount+'</span></a></li>');
+                    $('#idPopularTopics').append('<li><a href="/ns?action=topic&id='+topic.id+'">'+topic.title+'<span class="badge pull-right">'+topic.commentsCount+'</span></a></li>');
                 })
             }
         });
+
+        $.ajax({
+            url: '/ts?action=getAllActiveTopics',
+            type: 'GET',
+            dataType: 'json',
+            success: function (topicList) {
+                topicList.forEach(function (topic) {
+                    $('#idDivActiveThreads').empty();
+                    $('#idDivActiveThreads').append('<div class="divline"></div>');
+                    $('#idDivActiveThreads').append('<div class="blocktxt">\n' +
+                        '<a href="/ns?action=topic&id='+topic.id+'">'+topic.title+'</a>\n' +
+                        '</div>');
+                })
+            }
+        });
+
     });
 </script>
 
@@ -35,25 +51,8 @@
         <c:when test="${sessionScope.user ne null}">
             <div class="sidebarblock">
                 <h3 class="bg-primary">My Active Threads</h3>
-                <div class="divline"></div>
-                <div class="blocktxt">
-                    <a href="#">This Dock Turns Your iPhone Into a Bedside Lamp</a>
-                </div>
-                <div class="divline"></div>
-                <div class="blocktxt">
-                    <a href="#">Who Wins in the Battle for Power on the Internet?</a>
-                </div>
-                <div class="divline"></div>
-                <div class="blocktxt">
-                    <a href="#">Sony QX10: A Funky, Overpriced Lens Camera for Your Smartphone</a>
-                </div>
-                <div class="divline"></div>
-                <div class="blocktxt">
-                    <a href="#">FedEx Simplifies Shipping for Small Businesses</a>
-                </div>
-                <div class="divline"></div>
-                <div class="blocktxt">
-                    <a href="#">Loud and Brave: Saudi Women Set to Protest Driving Ban</a>
+                <div id="idDivActiveThreads">
+
                 </div>
             </div>
         </c:when>

@@ -13,5 +13,6 @@ public class MessageConstants {
     //success
     public static final String SUCCESS_MESSAGE_REGISTRATION = "Registration completed! Please check your email and activate your profile";
     public static final String SUCCESS_MESSAGE_TOPIC_ADDED = "Topic added!";
+    public static final String SUCCESS_MESSAGE_COMMENT_ADDED = "Comment added!";
 
 }

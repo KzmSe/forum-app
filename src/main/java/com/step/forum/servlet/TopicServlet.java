@@ -3,6 +3,7 @@ package com.step.forum.servlet;
 import com.mysql.cj.xdevapi.JsonArray;
 import com.step.forum.constants.MessageConstants;
 import com.step.forum.dao.TopicDaoImpl;
+import com.step.forum.job.PopularTopicsUpdater;
 import com.step.forum.model.Topic;
 import com.step.forum.model.User;
 import com.step.forum.service.TopicService;
@@ -22,6 +23,18 @@ import java.util.List;
 public class TopicServlet extends HttpServlet {
 
     private TopicService topicService = new TopicServiceImpl(new TopicDaoImpl());
+    private PopularTopicsUpdater updater;
+
+    @Override
+    public void init() throws ServletException {
+        updater = new PopularTopicsUpdater(topicService);
+        updater.startJob();
+    }
+
+    @Override
+    public void destroy() {
+        updater.stopJob();
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -73,9 +86,17 @@ public class TopicServlet extends HttpServlet {
             }
 
         } else if (action.equals("getPopularTopics")) {
-            List<Topic> list = topicService.getPopularTopics();
+            List<Topic> list = updater.getPopularTopics();
             JSONArray jsonArray = new JSONArray(list);
             response.setContentType("application/json");
+            response.getWriter().write(jsonArray.toString());
+
+        } else if (action.equals("getAllActiveTopics")) {
+            User user = (User) request.getSession().getAttribute("user");
+            int idUser = user.getId();
+
+            List<Topic> allActiveTopics = topicService.getAllTopicsByUserId(idUser);
+            JSONArray jsonArray = new JSONArray(allActiveTopics);
             response.getWriter().write(jsonArray.toString());
 
         }

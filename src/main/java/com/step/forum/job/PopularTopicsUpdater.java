@@ -1,0 +1,42 @@
+package com.step.forum.job;
+
+import com.step.forum.model.Topic;
+import com.step.forum.service.TopicService;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+public class PopularTopicsUpdater {
+
+    private List<Topic> popularTopics;
+    private ScheduledExecutorService service;
+    private TopicService topicService;
+
+    //constructor
+    public PopularTopicsUpdater(TopicService topicService) {
+        this.topicService = topicService;
+    }
+
+    //getter
+    public List<Topic> getPopularTopics() {
+        return popularTopics;
+    }
+
+    //methods
+    public void startJob() {
+        updatePopularTopics();
+    }
+
+    public void stopJob() {
+        if (service != null) {
+            service.shutdown();
+        }
+    }
+
+    private void updatePopularTopics() {
+        service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(() -> popularTopics = topicService.getPopularTopics(), 0, 20, TimeUnit.SECONDS);
+    }
+}

@@ -16,4 +16,6 @@ public interface TopicDao {
 
     List<Topic> getPopularTopics();
 
+    List<Topic> getAllTopicsByUserId(int id);
+
 }

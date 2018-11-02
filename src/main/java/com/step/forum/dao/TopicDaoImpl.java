@@ -18,6 +18,7 @@ public class TopicDaoImpl implements TopicDao {
     private final static String INCREMENT_TOPIC_VIEW_COUNT_SQL = "update topic set view_count = view_count + 1 where id_topic = ?";
     private final static String ADD_TOPIC_SQL = "insert into topic(title, description, share_date, view_count, id_user) values(?,?,?,?,?);";
     private final static String GET_POPULAR_TOPICS_SQL = "select t.id_topic, t.title, count(c.id_comment) as comments from topic t left join comment c on t.id_topic = c.id_topic group by t.title having comments > ? order by comments desc limit ?";
+    private final static String GET_ALL_ACTIVE_POPULAR_TOPIC_SQL ="select * from topic where id_user = ?";
 
     @Override
     public List<Topic> getAllTopic() {
@@ -221,7 +222,39 @@ public class TopicDaoImpl implements TopicDao {
         return list;
     }
 
+    @Override
+    public List<Topic> getAllTopicsByUserId(int id) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Topic> list = new LinkedList<>();
 
+        try {
+            con = DbUtil.getConnection();
+            ps = con.prepareStatement(GET_ALL_ACTIVE_POPULAR_TOPIC_SQL);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Topic topic = new Topic();
+                topic.setId(rs.getInt("id_topic"));
+                topic.setTitle(rs.getString("title"));
+                topic.setDescription(rs.getString("description"));
+                topic.setShareDate(rs.getTimestamp("share_date").toLocalDateTime());
+                topic.setViewCount(rs.getInt("view_count"));
+
+                list.add(topic);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            DbUtil.closeAll(con, ps, rs);
+        }
+
+        return list;
+    }
 
 
 }
