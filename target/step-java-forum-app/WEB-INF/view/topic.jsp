@@ -64,9 +64,6 @@
                     <c:if test="${sessionScope.user ne null}">
                         <!-- REPLY -->
                         <div class="post">
-                            <form action="/cs" class="form" method="post">
-                                <input type="hidden" name="action" value="addComment">
-                                <input type="hidden" name="idTopic" value="${topic.id}">
                                 <div class="topwrap">
                                     <div class="userinfo pull-left">
                                         <div class="avatar">
@@ -78,7 +75,7 @@
                                     <div class="posttext pull-left">
                                         <div class="textwraper">
                                             <div class="postreply">Post a Reply</div>
-                                            <textarea name="description" placeholder="Type your message here"></textarea>
+                                            <textarea id="description" placeholder="Type your message here"></textarea>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -88,7 +85,7 @@
 
                                     <div class="pull-right postreply">
                                         <div class="pull-left">
-                                            <button type="submit" class="btn btn-primary">Post Reply</button>
+                                            <button onclick="addComment()" class="btn btn-primary">Post Reply</button>
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
@@ -96,7 +93,6 @@
 
                                     <div class="clearfix"></div>
                                 </div>
-                            </form>
                         </div>
                         <!-- REPLY -->
                     </c:if>
@@ -121,6 +117,14 @@
 
 <script type="text/javascript">
     $(function () {
+        getComments();
+
+        <c:if test="${message ne null}">
+        alert('${message}');
+        </c:if>
+    });
+
+    function getComments() {
         $.ajax({
             url: '/cs?action=getComments',
             type: 'GET',
@@ -131,11 +135,20 @@
                 $('#idDivComment').html(data);
             }
         });
+    }
 
-        <c:if test="${message ne null}">
-        alert('${message}');
-        </c:if>
-    });
+    function addComment() {
+        var description = $('#description').val();
+        $.ajax({
+            url: '/cs?action=addComment',
+            type: 'POST',
+            data: 'idTopic=' + ${topic.id} + '&description=' + description,
+            success: function () {
+                alert('Topic added!');
+                getComments();
+            }
+        });
+    }
 </script>
 
 </body>

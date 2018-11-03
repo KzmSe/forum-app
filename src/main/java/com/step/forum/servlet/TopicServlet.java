@@ -93,13 +93,19 @@ public class TopicServlet extends HttpServlet {
 
         } else if (action.equals("getAllActiveTopics")) {
             User user = (User) request.getSession().getAttribute("user");
-            int idUser = user.getId();
 
-            List<Topic> allActiveTopics = topicService.getAllTopicsByUserId(idUser);
-            JSONArray jsonArray = new JSONArray(allActiveTopics);
-            response.getWriter().write(jsonArray.toString());
-
+            if (user != null) {
+                int idUser = user.getId();
+                List<Topic> allActiveTopics = topicService.getAllTopicsByUserId(idUser);
+                JSONArray jsonArray = new JSONArray(allActiveTopics);
+                response.getWriter().write(jsonArray.toString());
+            }
         }
+
+
+
+
+
 
     }
 }
