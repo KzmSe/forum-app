@@ -42,4 +42,9 @@ public class TopicServiceImpl implements TopicService {
     public List<Topic> getAllTopicsByUserId(int id) {
         return topicDao.getAllTopicsByUserId(id);
     }
+
+    @Override
+    public List<Topic> getSimilarTopics(String[] keywords) {
+        return topicDao.getSimilarTopics(keywords);
+    }
 }

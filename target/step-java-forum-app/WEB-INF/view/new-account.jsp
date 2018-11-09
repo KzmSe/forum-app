@@ -8,14 +8,14 @@
         <title>Forum :: New account</title>
 
         <!-- imports -->
-        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/imports.jsp"></c:import>
+        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-imports.jsp"></c:import>
 
     </head>
     <body class="newaccountpage">
 
         <div class="container-fluid">
 
-            <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-header.jsp"></c:import>
+            <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-header.jsp"></c:import>
 
             <section class="content">
                 <div class="container">
@@ -100,7 +100,7 @@
 
                         </div>
 
-                        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-right-menu.jsp"></c:import>
+                        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-right-menu.jsp"></c:import>
 
                     </div>
                 </div>
@@ -108,7 +108,7 @@
             </section>
 
               <footer>
-                  <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-footer.jsp"></c:import>
+                  <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-footer.jsp"></c:import>
             </footer>
         </div>
 

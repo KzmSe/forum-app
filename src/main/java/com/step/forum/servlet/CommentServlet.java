@@ -10,6 +10,7 @@ import com.step.forum.service.CommentService;
 import com.step.forum.service.CommentServiceImpl;
 import com.step.forum.service.TopicService;
 import com.step.forum.service.TopicServiceImpl;
+import com.step.forum.util.ValidationUtil;
 import com.sun.deploy.net.HttpRequest;
 import com.sun.deploy.net.HttpResponse;
 
@@ -53,6 +54,9 @@ public class CommentServlet extends HttpServlet {
         }
 
         if (action.equals("addComment")) {
+
+            //TODO: burda problem var..
+
             String description = request.getParameter("description");
             LocalDateTime writeDate = LocalDateTime.now();
             //get id user
@@ -74,6 +78,15 @@ public class CommentServlet extends HttpServlet {
             user1.setId(idUser);
             comment.setUser(user1);
 
+            Topic topic1 = topicService.getTopicById(idTopic);
+            request.setAttribute("topic", topic1);
+
+            if (!ValidationUtil.validate(description)) {
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
+                request.getRequestDispatcher("/WEB-INF/view/topic.jsp").forward(request, response);
+                return;
+            }
+
             boolean result = commentService.addComment(comment);
             if (result) {
                 request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_COMMENT_ADDED);
@@ -82,16 +95,13 @@ public class CommentServlet extends HttpServlet {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
             }
 
-            Topic topic1 = topicService.getTopicById(idTopic);
-            request.setAttribute("topic", topic1);
-
             request.getRequestDispatcher("/WEB-INF/view/topic.jsp").forward(request, response);
 
         } else if (action.equals("getComments")) {
             int idTopic = Integer.parseInt(request.getParameter("id"));
             List<Comment> comments = commentService.getCommentsByTopicId(idTopic);
             request.setAttribute("comments", comments);
-            request.getRequestDispatcher("/WEB-INF/fragments/page-comment.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/fragments/fragment-comments.jsp").forward(request, response);
 
         }
 

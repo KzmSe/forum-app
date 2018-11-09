@@ -8,14 +8,14 @@
         <title>Forum :: Home Page</title>
 
         <!-- imports -->
-        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/imports.jsp"></c:import>
+        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-imports.jsp"></c:import>
 
     </head>
     <body>
 
         <div class="container-fluid">
 
-            <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-header.jsp"></c:import>
+            <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-header.jsp"></c:import>
 
             <section class="content">
 
@@ -57,7 +57,7 @@
 
                         </div>
 
-                        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-right-menu.jsp"></c:import>
+                        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-right-menu.jsp"></c:import>
 
                     </div>
                 </div>
@@ -67,11 +67,18 @@
             </section>
 
             <footer>
-                <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-footer.jsp"></c:import>
+                <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-footer.jsp"></c:import>
             </footer>
 
         </div>
 
+        <script type="text/javascript">
+            $(function () {
+                <c:if test="${message ne null}">
+                alert('${message}');
+                </c:if>
+            });
+        </script>
     </body>
 
 <!-- Mirrored from forum.azyrusthemes.com/index.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Oct 2018 05:38:53 GMT -->

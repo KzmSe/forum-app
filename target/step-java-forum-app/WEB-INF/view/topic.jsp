@@ -8,14 +8,14 @@
     <title>Forum :: Topic</title>
 
     <!-- imports -->
-    <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/imports.jsp"></c:import>
+    <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-imports.jsp"></c:import>
 
 </head>
 <body class="topic">
 
 <div class="container-fluid">
 
-    <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-header.jsp"></c:import>
+    <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-header.jsp"></c:import>
 
     <section class="content">
         <br><br>
@@ -75,7 +75,7 @@
                                     <div class="posttext pull-left">
                                         <div class="textwraper">
                                             <div class="postreply">Post a Reply</div>
-                                            <textarea id="description" placeholder="Type your message here"></textarea>
+                                            <textarea id="description" placeholder="Type your message here" required></textarea>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -100,7 +100,7 @@
 
                 </div>
 
-                <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-right-menu.jsp"></c:import>
+                <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-right-menu.jsp"></c:import>
 
             </div>
         </div>
@@ -111,7 +111,7 @@
     </section>
 
     <footer>
-        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-footer.jsp"></c:import>
+        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-footer.jsp"></c:import>
     </footer>
 </div>
 

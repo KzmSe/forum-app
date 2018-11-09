@@ -20,8 +20,8 @@
             type: 'GET',
             dataType: 'json',
             success: function (topicList) {
+                $('#idDivActiveThreads').empty();
                 topicList.forEach(function (topic) {
-                    $('#idDivActiveThreads').empty();
                     $('#idDivActiveThreads').append('<div class="divline"></div>');
                     $('#idDivActiveThreads').append('<div class="blocktxt">\n' +
                         '<a href="/ns?action=topic&id='+topic.id+'">'+topic.title+'</a>\n' +
@@ -50,7 +50,7 @@
     <c:choose>
         <c:when test="${sessionScope.user ne null}">
             <div class="sidebarblock">
-                <h3 class="bg-primary">My Active Threads</h3>
+                <h3 class="bg-primary">My Active Topics</h3>
                 <div id="idDivActiveThreads">
 
                 </div>

@@ -18,4 +18,6 @@ public interface TopicDao {
 
     List<Topic> getAllTopicsByUserId(int id);
 
+    List<Topic> getSimilarTopics(String[] keywords);
+
 }

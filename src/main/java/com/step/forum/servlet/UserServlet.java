@@ -11,6 +11,8 @@ import com.step.forum.model.Role;
 import com.step.forum.model.User;
 import com.step.forum.service.UserService;
 import com.step.forum.service.UserServiceImpl;
+import com.step.forum.util.CryptoUtil;
+import com.step.forum.util.EmailUtil;
 import com.step.forum.util.ValidationUtil;
 
 import javax.servlet.ServletException;
@@ -21,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/us")
 public class UserServlet extends HttpServlet {
@@ -49,13 +54,13 @@ public class UserServlet extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             String rePassword = request.getParameter("rePassword");
-            //TODO: password-la rePassword-un eyniliyi yoxlanilir
+            //TODO: password-la rePassword-un eyniliyi yoxlanilir..
 
             User user = new User();
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setEmail(email);
-            user.setPassword(password);
+            user.setPassword(CryptoUtil.inputToHash(password));
 
             //status
             user.setStatus(UserConstants.USER_STATUS_INACTIVE);
@@ -78,7 +83,22 @@ public class UserServlet extends HttpServlet {
 
             try {
                 if (userService.addUser(user)) {
-                    //TODO: send email..
+                    String body = "Qeydiyyati tamamlamaq ucun linke daxil olun:" + "http://localhost:8080/us?action=activate&token=" + user.getToken();
+
+                    //paralel thread for mail sending
+                    ExecutorService service = null;
+                    try {
+                        service = Executors.newFixedThreadPool(20);
+                        service.submit(() -> {
+                            EmailUtil.sendEmail(email, "REGISTRATION", body);
+                        });
+
+                    } finally {
+                        if (service != null) {
+                            service.shutdown();
+                        }
+                    }
+
                     request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_REGISTRATION);
                     request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
                 } else {
@@ -95,8 +115,13 @@ public class UserServlet extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
+            if (!ValidationUtil.validate(email, password)) {
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
+                request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+            }
+
             try {
-                User user = userService.login(email, password);
+                User user = userService.login(email, CryptoUtil.inputToHash(password));
                 if (user != null) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
@@ -107,6 +132,9 @@ public class UserServlet extends HttpServlet {
                 request.setAttribute("message", e.getMessage());
                 request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
             }
+        } else if (action.equals("activate")) {
+            //TODO: bura yazilmalidir..
+
         }
 
 

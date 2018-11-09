@@ -8,6 +8,7 @@ import com.step.forum.model.Topic;
 import com.step.forum.model.User;
 import com.step.forum.service.TopicService;
 import com.step.forum.service.TopicServiceImpl;
+import com.step.forum.util.ValidationUtil;
 import org.json.JSONArray;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet(name = "TopicServlet", urlPatterns = "/ts")
@@ -75,15 +78,20 @@ public class TopicServlet extends HttpServlet {
             topic.setViewCount(viewCount);
             topic.setUser(user);
 
+            if (!ValidationUtil.validate(title, description)) {
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
+                request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
+            }
+
             boolean resultAddTopic = topicService.addTopic(topic);
 
             if (resultAddTopic) {
-                request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_TOPIC_ADDED);
-                request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
+                request.getSession().setAttribute("message", MessageConstants.SUCCESS_MESSAGE_TOPIC_ADDED);
             } else {
-                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
-                request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
+                request.getSession().setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
             }
+
+            response.sendRedirect("/");
 
         } else if (action.equals("getPopularTopics")) {
             List<Topic> list = updater.getPopularTopics();
@@ -99,6 +107,15 @@ public class TopicServlet extends HttpServlet {
                 List<Topic> allActiveTopics = topicService.getAllTopicsByUserId(idUser);
                 JSONArray jsonArray = new JSONArray(allActiveTopics);
                 response.getWriter().write(jsonArray.toString());
+            }
+        } else if (action.equals("getSimilarTopics")) {
+            String title = request.getParameter("title");
+            String[] keywords = title.trim().split(" ");
+            keywords = Arrays.stream(keywords).filter(keyword -> keyword.length() >= 3).toArray(keyword -> new String[keyword]);
+            List<Topic> similarTopics = topicService.getSimilarTopics(keywords);
+            if (similarTopics != null) {
+                request.setAttribute("similarTopics", similarTopics);
+                request.getRequestDispatcher("/WEB-INF/fragments/fragment-similar-post.jsp").forward(request, response);
             }
         }
 

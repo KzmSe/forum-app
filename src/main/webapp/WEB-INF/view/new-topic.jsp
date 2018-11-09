@@ -3,156 +3,115 @@
 
 <html lang="en">
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Forum :: New topic</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Forum :: New topic</title>
 
-        <!-- imports -->
-        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/imports.jsp"></c:import>
+    <!-- imports -->
+    <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-imports.jsp"></c:import>
 
-    </head>
-    <body>
+    <script type="text/javascript">
+        $(function () {
+            $('#idInputTitle').blur(function () {
+                var title = $('#idInputTitle').val();
+                $.ajax({
+                    url: '/ts?action=getSimilarTopics',
+                    method: 'GET',
+                    dataType: 'html',
+                    data: 'title=' + title,
+                    success: function (data) {
+                        $('#idDivSimilarPost').html(data);
+                    }
+                });
+            });
 
-        <div class="container-fluid">
+            <c:if test="${message ne null}">
+            alert('${message}');
+            </c:if>
+        });
+    </script>
 
-            <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-header.jsp"></c:import>
+</head>
+<body>
 
-            <section class="content">
-                <br><br>
+<div class="container-fluid">
 
+    <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-header.jsp"></c:import>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-8 col-md-8">
-
-
-
-                            <!-- POST -->
-                            <div class="post">
-                                <form action="${pageContext.request.contextPath}/ts?action=addTopic" class="form newtopic" method="post">
-                                    <div class="topwrap">
-                                        <div class="userinfo pull-left">
-                                            <div class="avatar">
-                                                <img src="${pageContext.request.contextPath}/resources/images/avatar4.jpg" alt="" />
-                                            </div>
-                                        </div>
-                                        <div class="posttext pull-left">
-
-                                            <div>
-                                                <input type="text" placeholder="Enter Topic Title" name="title" class="form-control" />
-                                            </div>
-
-
-                                            <div>
-                                                <textarea name="description" placeholder="Description"  class="form-control" ></textarea>
-                                            </div>
-
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>                              
-                                    <div class="postinfobot">
-
-                                        <div class="pull-right postreply">
-                                            <div class="pull-left"><button type="submit" class="btn btn-primary">Post</button></div>
-                                            <div class="clearfix"></div>
-                                        </div>
+    <section class="content">
+        <br><br>
 
 
-                                        <div class="clearfix"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8">
+
+
+                    <!-- POST -->
+                    <div class="post">
+                        <form action="${pageContext.request.contextPath}/ts?action=addTopic" class="form newtopic"
+                              method="post">
+                            <div class="topwrap">
+                                <div class="userinfo pull-left">
+                                    <div class="avatar">
+                                        <img src="${pageContext.request.contextPath}/resources/images/avatar4.jpg"
+                                             alt=""/>
                                     </div>
-                                </form>
-                            </div>
-                            <!-- POST -->
-
-                            <div class="row similarposts">
-                                <div class="col-lg-10"><i class="fa fa-info-circle"></i> <p>Similar Posts according to your Topic Title.</p></div>
-                            </div>
-
-                            <!-- POST -->
-                            <div class="post">
-                                <div class="wrap-ut pull-left">
-                                    <div class="userinfo pull-left">
-                                        <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" />
-                                        </div>
-                                    </div>
-                                    <div class="posttext pull-left">
-                                        <h2><a href="topic.jsp">10 Kids Unaware of Their Halloween Costume</a></h2>
-                                        <p>It's one thing to subject yourself to a Halloween costume mishap because, hey, that's your prerogative.</p>
-                                    </div>
-                                    <div class="clearfix"></div>
                                 </div>
-                                <div class="postinfo pull-left">
-                                    <div class="comments">
-                                        <div class="commentbg">
-                                            560
-                                            <div class="mark"></div>
-                                        </div>
+                                <div class="posttext pull-left">
 
+                                    <div>
+                                        <input type="text" placeholder="Enter Topic Title" name="title"
+                                               id="idInputTitle"
+                                               class="form-control" required/>
                                     </div>
-                                    <div class="views"><i class="fa fa-eye"></i> 1,568</div>
-                                    <div class="time"><i class="fa fa-clock-o"></i> 24 min</div>                                    
+
+
+                                    <div>
+                                        <textarea name="description" placeholder="Description" class="form-control"
+                                                  required></textarea>
+                                    </div>
+
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <!-- POST -->
+                            <div class="postinfobot">
 
-                            <!-- POST -->
-                            <div class="post">
-                                <div class="wrap-ut pull-left">
-                                    <div class="userinfo pull-left">
-                                        <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="" />
-                                        </div>
-                                    </div>
-                                    <div class="posttext pull-left">
-                                        <h2><a href="topic.jsp">10 Kids Unaware of Their Halloween Costume</a></h2>
-                                        <p>It's one thing to subject yourself to a Halloween costume mishap because, hey, that's your prerogative.</p>
+                                <div class="pull-right postreply">
+                                    <div class="pull-left">
+                                        <button type="submit" class="btn btn-primary">Post</button>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
-                                <div class="postinfo pull-left">
-                                    <div class="comments">
-                                        <div class="commentbg">
-                                            560
-                                            <div class="mark"></div>
-                                        </div>
 
-                                    </div>
-                                    <div class="views"><i class="fa fa-eye"></i> 1,568</div>
-                                    <div class="time"><i class="fa fa-clock-o"></i> 24 min</div>                                    
-                                </div>
+
                                 <div class="clearfix"></div>
                             </div>
-                            <!-- POST -->
-
-
-
-
-                        </div>
-
-                        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-right-menu.jsp"></c:import>
-
+                        </form>
                     </div>
+                    <!-- POST -->
+
+                    <!-- POST -->
+                    <div id="idDivSimilarPost">
+                    </div>
+                    <!-- POST -->
+
+
                 </div>
 
-            </section>
+                <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-right-menu.jsp"></c:import>
 
-            <footer>
-                <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/page-footer.jsp"></c:import>
-            </footer>
-
+            </div>
         </div>
 
-        <script type="text/javascript">
-            $(function () {
-                <c:if test="${message ne null}">
-                alert('${message}');
-                </c:if>
-            });
-        </script>
+    </section>
 
-    </body>
+    <footer>
+        <c:import url="${pageContext.request.contextPath}/WEB-INF/fragments/fragment-footer.jsp"></c:import>
+    </footer>
+
+</div>
+</body>
 
 <!-- Mirrored from forum.azyrusthemes.com/new-topic.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Oct 2018 07:34:53 GMT -->
 </html>

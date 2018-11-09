@@ -48,12 +48,10 @@ public class NavigationServlet extends HttpServlet {
         if (action.equals("newTopic")) {
             address = "/WEB-INF/view/new-topic.jsp";
 
-
         } else if (action.equals("topic")) {
             int idTopic = Integer.parseInt(request.getParameter("id"));
             Topic topic = topicService.getTopicById(idTopic);
             topicService.incrementTopicViewCount(idTopic);
-
             if (topic != null) {
                 request.setAttribute("topic", topic);
             }
@@ -76,8 +74,6 @@ public class NavigationServlet extends HttpServlet {
         if (address != null) {
             request.getRequestDispatcher(address).forward(request, response);
         }
-
-
     }
 
 

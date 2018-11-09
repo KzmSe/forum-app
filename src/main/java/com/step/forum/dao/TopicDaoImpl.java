@@ -19,6 +19,7 @@ public class TopicDaoImpl implements TopicDao {
     private final static String ADD_TOPIC_SQL = "insert into topic(title, description, share_date, view_count, id_user) values(?,?,?,?,?);";
     private final static String GET_POPULAR_TOPICS_SQL = "select t.id_topic, t.title, count(c.id_comment) as comments from topic t left join comment c on t.id_topic = c.id_topic group by t.title having comments > ? order by comments desc limit ?";
     private final static String GET_ALL_ACTIVE_POPULAR_TOPIC_SQL ="select * from topic where id_user = ?";
+    private final static String GET_SIMILAR_TOPICS_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic";
 
     @Override
     public List<Topic> getAllTopic() {
@@ -255,6 +256,82 @@ public class TopicDaoImpl implements TopicDao {
 
         return list;
     }
+
+    @Override
+    public List<Topic> getSimilarTopics(String[] keywords) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Topic> list = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder(GET_SIMILAR_TOPICS_SQL);
+        stringBuilder.append(" where");
+
+        for (int i = 0; i < keywords.length; i++) { //[maven, spring] 2 (0 ,1)
+            stringBuilder.append(" t.title like ?");
+            if (i < keywords.length-1) {
+                stringBuilder.append(" or");
+            }
+        }
+        stringBuilder.append(" order by t.share_date desc");
+
+        try {
+            con = DbUtil.getConnection();
+            ps = con.prepareStatement(stringBuilder.toString());
+
+            //TODO: ? ishareleri oldugu kimi qalir..
+            for (int i = 0; i < keywords.length; i++) { //(0, 1) 2
+                ps.setString(i+1, "%" + keywords[i] + "%");
+            }
+
+            System.out.println(stringBuilder);
+
+            rs = ps.executeQuery();
+            Map<Integer, Topic> map = new LinkedHashMap<>();
+
+            while (rs.next()) {
+                Topic topic = map.get(rs.getInt("id_topic"));
+
+                if (topic == null) {
+                    topic = new Topic();
+                    topic.setId(rs.getInt("id_topic"));
+                    topic.setTitle(rs.getString("title"));
+                    topic.setDescription(rs.getString("topic_description"));
+                    topic.setShareDate(rs.getTimestamp("share_date").toLocalDateTime());
+                    topic.setViewCount(rs.getInt("view_count"));
+
+                    User user = new User();
+                    user.setId(rs.getInt("id_user"));
+                    user.setEmail(rs.getString("email"));
+                    user.setFirstname(rs.getString("first_name"));
+                    user.setLastname(rs.getString("last_name"));
+
+                    topic.setUser(user);
+                    map.put(topic.getId(), topic);
+                }
+
+                if (rs.getInt("id_comment") != 0) {
+                    Comment comment = new Comment();
+                    comment.setId(rs.getInt("id_comment"));
+                    comment.setDescription(rs.getString("comment_description"));
+                    comment.setWriteDate(rs.getTimestamp("write_date").toLocalDateTime());
+                    topic.addComment(comment);
+                }
+            }
+
+            list = new ArrayList<>(map.values());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            DbUtil.closeAll(con, ps, rs);
+        }
+
+        return list;
+    }
+
+
+
 
 
 }
