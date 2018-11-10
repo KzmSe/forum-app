@@ -54,7 +54,11 @@ public class UserServlet extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             String rePassword = request.getParameter("rePassword");
-            //TODO: password-la rePassword-un eyniliyi yoxlanilir..
+
+            if (!password.equals(rePassword)) {
+                response.sendRedirect("/ns?action=register");
+                return;
+            }
 
             User user = new User();
             user.setFirstname(firstname);
@@ -121,7 +125,8 @@ public class UserServlet extends HttpServlet {
             }
 
             try {
-                User user = userService.login(email, CryptoUtil.inputToHash(password));
+                //TODO: set hash..
+                User user = userService.login(email, password);
                 if (user != null) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);

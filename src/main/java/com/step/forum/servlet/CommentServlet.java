@@ -54,9 +54,6 @@ public class CommentServlet extends HttpServlet {
         }
 
         if (action.equals("addComment")) {
-
-            //TODO: burda problem var..
-
             String description = request.getParameter("description");
             LocalDateTime writeDate = LocalDateTime.now();
             //get id user

@@ -113,6 +113,7 @@ public class TopicServlet extends HttpServlet {
             String[] keywords = title.trim().split(" ");
             keywords = Arrays.stream(keywords).filter(keyword -> keyword.length() >= 3).toArray(keyword -> new String[keyword]);
             List<Topic> similarTopics = topicService.getSimilarTopics(keywords);
+            System.out.println(similarTopics);
             if (similarTopics != null) {
                 request.setAttribute("similarTopics", similarTopics);
                 request.getRequestDispatcher("/WEB-INF/fragments/fragment-similar-post.jsp").forward(request, response);

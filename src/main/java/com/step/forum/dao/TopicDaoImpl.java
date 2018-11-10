@@ -278,12 +278,9 @@ public class TopicDaoImpl implements TopicDao {
             con = DbUtil.getConnection();
             ps = con.prepareStatement(stringBuilder.toString());
 
-            //TODO: ? ishareleri oldugu kimi qalir..
             for (int i = 0; i < keywords.length; i++) { //(0, 1) 2
                 ps.setString(i+1, "%" + keywords[i] + "%");
             }
-
-            System.out.println(stringBuilder);
 
             rs = ps.executeQuery();
             Map<Integer, Topic> map = new LinkedHashMap<>();

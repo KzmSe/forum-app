@@ -144,8 +144,8 @@
             type: 'POST',
             data: 'idTopic=' + ${topic.id} + '&description=' + description,
             success: function () {
-                alert('Topic added!');
                 getComments();
+                $('#description').val('');
             }
         });
     }
