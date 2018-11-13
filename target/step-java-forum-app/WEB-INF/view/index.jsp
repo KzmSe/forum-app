@@ -30,7 +30,7 @@
                                     <div class="wrap-ut pull-left">
                                         <div class="userinfo pull-left">
                                             <div class="avatar">
-                                                <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg" alt="${topic.user.firstname} ${topic.user.lastname}" title="${topic.user.firstname} ${topic.user.lastname}"/>
+                                                <img src="${pageContext.request.contextPath}/uploads/${topic.user.imagePath}" alt="${topic.user.firstname} ${topic.user.lastname}" title="${topic.user.firstname} ${topic.user.lastname}"/>
                                             </div>
                                         </div>
                                         <div class="posttext pull-left">

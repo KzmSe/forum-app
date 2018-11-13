@@ -16,18 +16,22 @@ import com.step.forum.util.EmailUtil;
 import com.step.forum.util.ValidationUtil;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/us")
+@MultipartConfig(maxFileSize = 1024 * 1024 * 5,
+                    maxRequestSize = 1024 * 1024 * 5)
 public class UserServlet extends HttpServlet {
 
     private UserService userService = new UserServiceImpl(new UserDaoImpl());
@@ -56,14 +60,43 @@ public class UserServlet extends HttpServlet {
             String rePassword = request.getParameter("rePassword");
 
             if (!password.equals(rePassword)) {
-                response.sendRedirect("/ns?action=register");
+//                response.sendRedirect("/ns?action=register");
+                //TODO: password-lar ferqlidir mesaji gonder..
+                request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
                 return;
+            }
+
+            //validation
+            boolean validationResult = ValidationUtil.validate(firstname, lastname, email, password);
+            if (!validationResult) {
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
+                request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
+            }
+
+            //image
+            Part image = request.getPart("image");
+            Path pathToSaveDb = null;
+
+            if (image.getSubmittedFileName().isEmpty()) {
+                pathToSaveDb = Paths.get("default.png");
+
+            } else {
+                Path pathDirectories = Paths.get(getServletContext().getRealPath("/"), "uploads", email);
+                Path pathFiles = Paths.get(pathDirectories.toString(), image.getSubmittedFileName());
+                pathToSaveDb = Paths.get(email, image.getSubmittedFileName());
+
+                if (!Files.exists(pathDirectories)) {
+                    Files.createDirectories(pathDirectories);
+                }
+
+                Files.copy(image.getInputStream(), pathFiles, StandardCopyOption.REPLACE_EXISTING);
             }
 
             User user = new User();
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setEmail(email);
+            user.setImagePath(pathToSaveDb.toString());
             user.setPassword(CryptoUtil.inputToHash(password));
 
             //status
@@ -78,13 +111,6 @@ public class UserServlet extends HttpServlet {
             UUID token = UUID.randomUUID();
             user.setToken(token.toString());
 
-            //validation
-            boolean validationResult = ValidationUtil.validate(firstname, lastname, email, password);
-            if (!validationResult) {
-                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
-                request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
-            }
-
             try {
                 if (userService.addUser(user)) {
                     String body = "Qeydiyyati tamamlamaq ucun linke daxil olun:" + "http://localhost:8080/us?action=activate&token=" + user.getToken();
@@ -94,7 +120,8 @@ public class UserServlet extends HttpServlet {
                     try {
                         service = Executors.newFixedThreadPool(20);
                         service.submit(() -> {
-                            EmailUtil.sendEmail(email, "REGISTRATION", body);
+                            //TODO: mail gonder..
+//                            EmailUtil.sendEmail(email, "REGISTRATION", body);
                         });
 
                     } finally {
@@ -125,8 +152,7 @@ public class UserServlet extends HttpServlet {
             }
 
             try {
-                //TODO: set hash..
-                User user = userService.login(email, password);
+                User user = userService.login(email, CryptoUtil.inputToHash(password));
                 if (user != null) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);

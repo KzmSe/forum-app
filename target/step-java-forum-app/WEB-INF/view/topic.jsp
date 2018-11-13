@@ -30,7 +30,7 @@
                         <div class="topwrap">
                             <div class="userinfo pull-left">
                                 <div class="avatar">
-                                    <img src="${pageContext.request.contextPath}/resources/images/avatar.jpg"
+                                    <img src="${pageContext.request.contextPath}/uploads/${topic.user.imagePath}"
                                          alt="${topic.user.firstname} ${topic.user.lastname}"
                                          title="${topic.user.firstname} ${topic.user.lastname}"/>
                                 </div>
@@ -67,7 +67,7 @@
                                 <div class="topwrap">
                                     <div class="userinfo pull-left">
                                         <div class="avatar">
-                                            <img src="${pageContext.request.contextPath}/resources/images/avatar4.jpg"
+                                            <img src="${pageContext.request.contextPath}/uploads/${sessionScope.user.imagePath}"
                                                  alt=""/>
                                         </div>
 

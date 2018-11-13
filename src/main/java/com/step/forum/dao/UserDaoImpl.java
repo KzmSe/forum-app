@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 public class UserDaoImpl implements UserDao {
 
-    private final String ADD_USER_SQL = "insert into user(email, password, token, status, id_role, first_name, last_name) values(?, ?, ?, ?, ?, ?, ?)";
+    private final String ADD_USER_SQL = "insert into user(email, password, token, status, id_role, first_name, last_name, image) values(?, ?, ?, ?, ?, ?, ?, ?)";
     private final String GET_EMAIL_COUNT_SQL = "select count(email) as count from user where email = ?";
     private final String GET_USER_BY_EMAIL_SQL = "select * from user where email = ?";
 
@@ -42,6 +42,7 @@ public class UserDaoImpl implements UserDao {
             ps.setInt(5, user.getRole().getId());
             ps.setString(6, user.getFirstname());
             ps.setString(7, user.getLastname());
+            ps.setString(8, user.getImagePath());
 
             ps.executeUpdate();
             result = true;
@@ -87,6 +88,7 @@ public class UserDaoImpl implements UserDao {
                 user.setToken(rs.getString("token"));
                 user.setFirstname(rs.getString("first_name"));
                 user.setLastname(rs.getString("last_name"));
+                user.setImagePath(rs.getString("image"));
 
                 Role role = new Role();
                 role.setId(rs.getInt("id_role"));

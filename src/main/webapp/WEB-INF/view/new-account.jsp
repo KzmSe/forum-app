@@ -35,8 +35,7 @@
 
                             <!-- POST -->
                             <div class="post">
-                                <form action="us" class="form newtopic" method="POST">
-                                    <input type="hidden" name="action" value="doRegister">
+                                <form action="us?action=doRegister" class="form newtopic" method="POST" enctype="multipart/form-data">
                                     <div class="postinfotop">
                                         <h2>Create New Account</h2>
                                     </div>
@@ -63,6 +62,9 @@
                                                 </div>
                                                 <div>
                                                     <input type="text" placeholder="Email" class="form-control" name="email"/>
+                                                </div>
+                                                <div>
+                                                    <input type="file" class="form-control" name="image" accept="image/jpeg, image/jpg, image/png">
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-6 col-md-6">

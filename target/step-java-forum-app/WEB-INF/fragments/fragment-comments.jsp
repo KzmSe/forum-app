@@ -7,7 +7,7 @@
         <div class="topwrap">
             <div class="userinfo pull-left">
                 <div class="avatar">
-                    <img src="${pageContext.request.contextPath}/resources/images/avatar2.jpg"
+                    <img src="${pageContext.request.contextPath}/uploads/${comment.user.imagePath}"
                          alt="${comment.user.firstname} ${comment.user.lastname}"
                          title="${comment.user.firstname} ${comment.user.lastname}"/>
                 </div>

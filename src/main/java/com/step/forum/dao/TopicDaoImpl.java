@@ -13,13 +13,13 @@ import java.util.*;
 
 public class TopicDaoImpl implements TopicDao {
 
-    private final String GET_ALL_TOPIC_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic order by t.share_date desc";
-    private final String GET_TOPIC_BY_ID_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date, us.id_user as id_user_comment, us.first_name as first_name_comment, us.last_name as last_name_comment from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic left join user us on us.id_user = c.id_user where t.id_topic = ?";
+    private final String GET_ALL_TOPIC_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, u.image, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic order by t.share_date desc";
+    private final String GET_TOPIC_BY_ID_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, u.image as 't.image', c.id_comment, c.description as comment_description, c.write_date, us.id_user as id_user_comment, us.first_name as first_name_comment, us.last_name as last_name_comment, us.image as 'c.image' from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic left join user us on us.id_user = c.id_user where t.id_topic = ?";
     private final static String INCREMENT_TOPIC_VIEW_COUNT_SQL = "update topic set view_count = view_count + 1 where id_topic = ?";
     private final static String ADD_TOPIC_SQL = "insert into topic(title, description, share_date, view_count, id_user) values(?,?,?,?,?);";
     private final static String GET_POPULAR_TOPICS_SQL = "select t.id_topic, t.title, count(c.id_comment) as comments from topic t left join comment c on t.id_topic = c.id_topic group by t.title having comments > ? order by comments desc limit ?";
     private final static String GET_ALL_ACTIVE_POPULAR_TOPIC_SQL ="select * from topic where id_user = ?";
-    private final static String GET_SIMILAR_TOPICS_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic";
+    private final static String GET_SIMILAR_TOPICS_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, u.id_user, u.email, u.first_name, u.last_name, u.image, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic where";
 
     @Override
     public List<Topic> getAllTopic() {
@@ -51,6 +51,7 @@ public class TopicDaoImpl implements TopicDao {
                     user.setEmail(rs.getString("email"));
                     user.setFirstname(rs.getString("first_name"));
                     user.setLastname(rs.getString("last_name"));
+                    user.setImagePath(rs.getString("image"));
 
                     topic.setUser(user); //topik-in user-i set edilir
                     map.put(topic.getId(), topic); //map-a topik elave edilir [id_topik, topik]
@@ -107,6 +108,7 @@ public class TopicDaoImpl implements TopicDao {
                     user.setEmail(rs.getString("email"));
                     user.setFirstname(rs.getString("first_name"));
                     user.setLastname(rs.getString("last_name"));
+                    user.setImagePath(rs.getString("t.image"));
 
                     topic.setUser(user);
                     map.put(topic.getId(), topic);
@@ -122,6 +124,7 @@ public class TopicDaoImpl implements TopicDao {
                     user.setId(rs.getInt("id_user_comment"));
                     user.setFirstname(rs.getString("first_name_comment"));
                     user.setLastname(rs.getString("last_name_comment"));
+                    user.setImagePath(rs.getString("c.image"));
                     comment.setUser(user);
 
                     topic.addComment(comment);
@@ -264,7 +267,6 @@ public class TopicDaoImpl implements TopicDao {
         ResultSet rs = null;
         List<Topic> list = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder(GET_SIMILAR_TOPICS_SQL);
-        stringBuilder.append(" where");
 
         for (int i = 0; i < keywords.length; i++) { //[maven, spring] 2 (0 ,1)
             stringBuilder.append(" t.title like ?");
@@ -301,6 +303,7 @@ public class TopicDaoImpl implements TopicDao {
                     user.setEmail(rs.getString("email"));
                     user.setFirstname(rs.getString("first_name"));
                     user.setLastname(rs.getString("last_name"));
+                    user.setImagePath(rs.getString("image"));
 
                     topic.setUser(user);
                     map.put(topic.getId(), topic);

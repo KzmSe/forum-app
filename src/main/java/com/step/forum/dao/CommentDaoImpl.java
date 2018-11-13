@@ -14,7 +14,7 @@ import java.util.List;
 public class CommentDaoImpl implements CommentDao {
 
     private static final String ADD_COMMENT_SQL = "insert into comment(description, write_date, id_topic, id_user) values(?, ?, ?, ?)";
-    private static final String GET_COMMENT_BY_TOPIC_ID_SQL = "select c.id_comment, c.description, c.write_date, u.id_user, u.email, u.first_name, u.last_name from comment c inner join user u on c.id_user=u.id_user where c.id_topic = ?";
+    private static final String GET_COMMENT_BY_TOPIC_ID_SQL = "select c.id_comment, c.description, c.write_date, u.id_user, u.email, u.first_name, u.last_name, u.image from comment c inner join user u on c.id_user=u.id_user where c.id_topic = ?";
 
     @Override
     public boolean addComment(Comment comment) {
@@ -67,6 +67,7 @@ public class CommentDaoImpl implements CommentDao {
                 user.setEmail(rs.getString("email"));
                 user.setFirstname(rs.getString("first_name"));
                 user.setLastname(rs.getString("last_name"));
+                user.setImagePath(rs.getString("image"));
 
                 comment.setUser(user);
                 list.add(comment);
