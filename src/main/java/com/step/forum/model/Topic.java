@@ -15,6 +15,7 @@ public class Topic {
     private LocalDateTime shareDate;
     private int viewCount;
     private int commentsCount;
+    private int status;
     private User user;
     private List<Comment> commentList;
 
@@ -36,6 +37,14 @@ public class Topic {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getDescription() {

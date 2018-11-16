@@ -11,6 +11,7 @@ import com.step.forum.model.Role;
 import com.step.forum.model.User;
 import com.step.forum.service.UserService;
 import com.step.forum.service.UserServiceImpl;
+import com.step.forum.util.ConfigUtil;
 import com.step.forum.util.CryptoUtil;
 import com.step.forum.util.EmailUtil;
 import com.step.forum.util.ValidationUtil;
@@ -73,7 +74,7 @@ public class UserServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
             }
 
-            //image
+            //file
             Part image = request.getPart("image");
             Path pathToSaveDb = null;
 
@@ -81,7 +82,7 @@ public class UserServlet extends HttpServlet {
                 pathToSaveDb = Paths.get("default.png");
 
             } else {
-                Path pathDirectories = Paths.get(getServletContext().getRealPath("/"), "uploads", email);
+                Path pathDirectories = Paths.get(ConfigUtil.getImageUploadPath(), email);
                 Path pathFiles = Paths.get(pathDirectories.toString(), image.getSubmittedFileName());
                 pathToSaveDb = Paths.get(email, image.getSubmittedFileName());
 

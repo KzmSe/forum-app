@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet(name = "HomeServlet", urlPatterns = "")
 public class HomeServlet extends HttpServlet {
 
-    private TopicService topikService = new TopicServiceImpl(new TopicDaoImpl());
+    private TopicService topicService = new TopicServiceImpl(new TopicDaoImpl());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -26,7 +26,7 @@ public class HomeServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<Topic> topicList = topikService.getAllTopic();
+        List<Topic> topicList = topicService.getAllTopic();
         request.setAttribute("topicList", topicList);
 
         String message = (String) request.getSession().getAttribute("message");

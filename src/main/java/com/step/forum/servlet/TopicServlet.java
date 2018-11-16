@@ -106,15 +106,16 @@ public class TopicServlet extends HttpServlet {
                 int idUser = user.getId();
                 List<Topic> allActiveTopics = topicService.getAllTopicsByUserId(idUser);
                 JSONArray jsonArray = new JSONArray(allActiveTopics);
+//                request.setAttribute("jsonArray", jsonArray);
+//                request.getRequestDispatcher("/WEB-INF/fragments/fragment-right-menu.jsp").forward(request, response);
                 response.getWriter().write(jsonArray.toString());
             }
         } else if (action.equals("getSimilarTopics")) {
             String title = request.getParameter("title");
             String[] keywords = title.trim().split(" ");
             keywords = Arrays.stream(keywords).filter(keyword -> keyword.length() >= 3).toArray(keyword -> new String[keyword]);
-            List<Topic> similarTopics = topicService.getSimilarTopics(keywords);
-            System.out.println(similarTopics);
-            if (similarTopics != null) {
+            List<Topic> similarTopics = (keywords.length == 0) ? new ArrayList<>() : topicService.getSimilarTopics(keywords);
+            if (similarTopics.size() != 0) {
                 request.setAttribute("similarTopics", similarTopics);
                 request.getRequestDispatcher("/WEB-INF/fragments/fragment-similar-post.jsp").forward(request, response);
             }

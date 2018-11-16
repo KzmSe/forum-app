@@ -51,11 +51,14 @@ public class NavigationServlet extends HttpServlet {
         } else if (action.equals("topic")) {
             int idTopic = Integer.parseInt(request.getParameter("id"));
             Topic topic = topicService.getTopicById(idTopic);
-            topicService.incrementTopicViewCount(idTopic);
             if (topic != null) {
+                topicService.incrementTopicViewCount(idTopic);
                 request.setAttribute("topic", topic);
+                address = "/WEB-INF/view/topic.jsp";
+            } else {
+                response.sendRedirect("/");
+                return;
             }
-            address = "/WEB-INF/view/topic.jsp";
 
         } else if (action.equals("register")) {
             address = "/WEB-INF/view/new-account.jsp";
