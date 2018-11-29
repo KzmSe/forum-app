@@ -23,7 +23,7 @@ public class TopicDaoImpl implements TopicDao {
     private final static String GET_SIMILAR_TOPICS_SQL = "select t.id_topic, t.title, t.description as topic_description, t.share_date, t.view_count, t.status, u.id_user, u.email, u.first_name, u.last_name, u.image, c.id_comment, c.description as comment_description, c.write_date from topic t inner join user u on t.id_user = u.id_user left join comment c on t.id_topic = c.id_topic where t.status = ?";
 
     @Override
-    public List<Topic> getAllTopic() {
+    public List<Topic> getAllTopic() throws SQLException {
 
         Connection con = null;
         PreparedStatement ps = null;
@@ -71,10 +71,7 @@ public class TopicDaoImpl implements TopicDao {
 
             list = new ArrayList<>(map.values()); //topik-ler liste cevirilir
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
+        }finally {
             DbUtil.closeAll(con, ps, rs);
         }
 
@@ -82,7 +79,7 @@ public class TopicDaoImpl implements TopicDao {
     }
 
     @Override
-    public Topic getTopicById(int id) {
+    public Topic getTopicById(int id) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -136,10 +133,7 @@ public class TopicDaoImpl implements TopicDao {
                 }
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
+        }finally {
             DbUtil.closeAll(con, ps, rs);
         }
 
@@ -147,10 +141,9 @@ public class TopicDaoImpl implements TopicDao {
     }
 
     @Override
-    public boolean incrementTopicViewCount(int id) {
+    public void incrementTopicViewCount(int id) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
-        boolean result = false;
 
         try {
             con = DbUtil.getConnection();
@@ -158,23 +151,16 @@ public class TopicDaoImpl implements TopicDao {
             ps.setInt(1, id);
             ps.executeUpdate();
 
-            result = true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
         } finally {
             DbUtil.closeAll(con, ps);
         }
 
-        return result;
     }
 
     @Override
-    public boolean addTopic(Topic topic) {
+    public void addTopic(Topic topic) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
-        boolean result = false;
 
         try {
             con = DbUtil.getConnection();
@@ -187,20 +173,14 @@ public class TopicDaoImpl implements TopicDao {
             ps.setInt(6, topic.getUser().getId());
             ps.executeUpdate();
 
-            result = true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
         } finally {
             DbUtil.closeAll(con, ps);
         }
 
-        return result;
     }
 
     @Override
-    public List<Topic> getPopularTopics() {
+    public List<Topic> getPopularTopics() throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -224,10 +204,7 @@ public class TopicDaoImpl implements TopicDao {
                 list.add(topic);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
+        }finally {
             DbUtil.closeAll(con, ps, rs);
         }
 
@@ -235,7 +212,7 @@ public class TopicDaoImpl implements TopicDao {
     }
 
     @Override
-    public List<Topic> getAllTopicsByUserId(int id) {
+    public List<Topic> getAllTopicsByUserId(int id) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -259,10 +236,7 @@ public class TopicDaoImpl implements TopicDao {
                 list.add(topic);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
+        }finally {
             DbUtil.closeAll(con, ps, rs);
         }
 
@@ -270,7 +244,7 @@ public class TopicDaoImpl implements TopicDao {
     }
 
     @Override
-    public List<Topic> getSimilarTopics(String[] keywords) {
+    public List<Topic> getSimilarTopics(String[] keywords) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -333,10 +307,7 @@ public class TopicDaoImpl implements TopicDao {
 
             list = new ArrayList<>(map.values());
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
+        }finally {
             DbUtil.closeAll(con, ps, rs);
         }
 

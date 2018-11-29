@@ -3,6 +3,7 @@ package com.step.forum.service;
 import com.step.forum.dao.TopicDao;
 import com.step.forum.model.Topic;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class TopicServiceImpl implements TopicService {
@@ -14,37 +15,37 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<Topic> getAllTopic() {
+    public List<Topic> getAllTopic() throws SQLException {
         return topicDao.getAllTopic();
     }
 
     @Override
-    public Topic getTopicById(int id) {
+    public Topic getTopicById(int id) throws SQLException {
         return topicDao.getTopicById(id);
     }
 
     @Override
-    public boolean incrementTopicViewCount(int id) {
-        return topicDao.incrementTopicViewCount(id);
+    public void incrementTopicViewCount(int id) throws SQLException {
+        topicDao.incrementTopicViewCount(id);
     }
 
     @Override
-    public boolean addTopic(Topic topic) {
-        return topicDao.addTopic(topic);
+    public void addTopic(Topic topic) throws SQLException {
+        topicDao.addTopic(topic);
     }
 
     @Override
-    public List<Topic> getPopularTopics() {
+    public List<Topic> getPopularTopics() throws SQLException {
         return topicDao.getPopularTopics();
     }
 
     @Override
-    public List<Topic> getAllTopicsByUserId(int id) {
+    public List<Topic> getAllTopicsByUserId(int id) throws SQLException {
         return topicDao.getAllTopicsByUserId(id);
     }
 
     @Override
-    public List<Topic> getSimilarTopics(String[] keywords) {
+    public List<Topic> getSimilarTopics(String[] keywords) throws SQLException {
         return topicDao.getSimilarTopics(keywords);
     }
 }

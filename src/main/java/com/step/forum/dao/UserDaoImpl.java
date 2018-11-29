@@ -6,6 +6,7 @@ import com.step.forum.exception.DuplicateEmailException;
 import com.step.forum.exception.InactiveStatusException;
 import com.step.forum.exception.InvalidEmailException;
 import com.step.forum.exception.InvalidPasswordException;
+import com.step.forum.model.Action;
 import com.step.forum.model.Role;
 import com.step.forum.model.User;
 import com.step.forum.util.DbUtil;
@@ -14,18 +15,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 
     private final String ADD_USER_SQL = "insert into user(email, password, token, status, id_role, first_name, last_name, image) values(?, ?, ?, ?, ?, ?, ?, ?)";
     private final String GET_EMAIL_COUNT_SQL = "select count(email) as count from user where email = ?";
     private final String GET_USER_BY_EMAIL_SQL = "select * from user where email = ?";
+    private final String GET_ACTION_LIST_BY_ROLE_ID_SQL = "select * from role_action ra inner join action ac on ra.id_action=ac.id_action where id_role = ?";
 
     @Override
-    public boolean addUser(User user) throws DuplicateEmailException {
+    public void addUser(User user) throws DuplicateEmailException, SQLException {
         Connection con = null;
         PreparedStatement ps = null;
-        boolean result = false;
 
         try {
             if (!isEmailValid(user.getEmail())) {
@@ -45,20 +48,15 @@ public class UserDaoImpl implements UserDao {
             ps.setString(8, user.getImagePath());
 
             ps.executeUpdate();
-            result = true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
 
         } finally {
             DbUtil.closeAll(con, ps);
         }
 
-        return result;
     }
 
     @Override
-    public User login(String email, String password) throws InvalidEmailException, InvalidPasswordException, InactiveStatusException {
+    public User login(String email, String password) throws InvalidEmailException, InvalidPasswordException, InactiveStatusException, SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -99,9 +97,6 @@ public class UserDaoImpl implements UserDao {
 
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
         } finally {
             DbUtil.closeAll(con, ps);
         }
@@ -109,7 +104,33 @@ public class UserDaoImpl implements UserDao {
         return user;
     }
 
+    @Override
+    public List<Action> getActionListByRoleId(int id) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Action> list = new ArrayList<>();
 
+        try {
+            con = DbUtil.getConnection();
+            ps = con.prepareStatement(GET_ACTION_LIST_BY_ROLE_ID_SQL);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Action action = new Action();
+                action.setId(rs.getInt("id_action"));
+                action.setActionType(rs.getString("action_type"));
+
+                list.add(action);
+            }
+
+        } finally {
+            DbUtil.closeAll(con, ps);
+        }
+
+        return list;
+    }
 
 
     //private methods

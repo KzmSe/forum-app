@@ -1,5 +1,6 @@
 package com.step.forum.servlet;
 
+import com.step.forum.constants.NavigationConstants;
 import com.step.forum.dao.TopicDaoImpl;
 import com.step.forum.model.Topic;
 import com.step.forum.service.TopicService;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "HomeServlet", urlPatterns = "")
@@ -26,7 +29,12 @@ public class HomeServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<Topic> topicList = topicService.getAllTopic();
+        List<Topic> topicList = new ArrayList<>();
+        try {
+            topicList = topicService.getAllTopic();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         request.setAttribute("topicList", topicList);
 
         String message = (String) request.getSession().getAttribute("message");
@@ -36,7 +44,7 @@ public class HomeServlet extends HttpServlet {
             request.getSession().removeAttribute("message");
         }
 
-        request.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(request, response);
+        request.getRequestDispatcher(NavigationConstants.PAGE_INDEX).forward(request, response);
 
     }
 }

@@ -2,6 +2,7 @@ package com.step.forum.servlet;
 
 import com.mysql.cj.xdevapi.JsonArray;
 import com.step.forum.constants.MessageConstants;
+import com.step.forum.constants.NavigationConstants;
 import com.step.forum.dao.TopicDaoImpl;
 import com.step.forum.job.PopularTopicsUpdater;
 import com.step.forum.model.Topic;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,15 +42,11 @@ public class TopicServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         processRequest(request, response);
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         processRequest(request, response);
-
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,7 +60,7 @@ public class TopicServlet extends HttpServlet {
             return;
         }
 
-        if (action.equals("addTopic")) {
+        if (action.equals(NavigationConstants.ACTION_ADD_TOPIC)) {
             String title = request.getParameter("title");
             String description = request.getParameter("description");
             LocalDateTime shareDate = LocalDateTime.now();
@@ -80,44 +78,53 @@ public class TopicServlet extends HttpServlet {
 
             if (!ValidationUtil.validate(title, description)) {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
-                request.getRequestDispatcher("/WEB-INF/view/new-topic.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.PAGE_NEW_TOPIC).forward(request, response);
             }
 
-            boolean resultAddTopic = topicService.addTopic(topic);
-
-            if (resultAddTopic) {
+            try {
+                topicService.addTopic(topic);
                 request.getSession().setAttribute("message", MessageConstants.SUCCESS_MESSAGE_TOPIC_ADDED);
-            } else {
+
+            } catch (SQLException e) {
+                e.printStackTrace();
                 request.getSession().setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
             }
 
             response.sendRedirect("/");
 
-        } else if (action.equals("getPopularTopics")) {
+        } else if (action.equals(NavigationConstants.ACTION_GET_POPULAR_TOPICS)) {
             List<Topic> list = updater.getPopularTopics();
             JSONArray jsonArray = new JSONArray(list);
             response.setContentType("application/json");
             response.getWriter().write(jsonArray.toString());
 
-        } else if (action.equals("getAllActiveTopics")) {
+        } else if (action.equals(NavigationConstants.ACTION_GET_ALL_ACTIVE_TOPICS)) {
             User user = (User) request.getSession().getAttribute("user");
 
             if (user != null) {
                 int idUser = user.getId();
-                List<Topic> allActiveTopics = topicService.getAllTopicsByUserId(idUser);
+                List<Topic> allActiveTopics = new ArrayList<>();
+                try {
+                    allActiveTopics = topicService.getAllTopicsByUserId(idUser);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 JSONArray jsonArray = new JSONArray(allActiveTopics);
-//                request.setAttribute("jsonArray", jsonArray);
-//                request.getRequestDispatcher("/WEB-INF/fragments/fragment-right-menu.jsp").forward(request, response);
                 response.getWriter().write(jsonArray.toString());
             }
-        } else if (action.equals("getSimilarTopics")) {
+        } else if (action.equals(NavigationConstants.ACTION_GET_SIMILAR_TOPICS)) {
             String title = request.getParameter("title");
             String[] keywords = title.trim().split(" ");
             keywords = Arrays.stream(keywords).filter(keyword -> keyword.length() >= 3).toArray(keyword -> new String[keyword]);
-            List<Topic> similarTopics = (keywords.length == 0) ? new ArrayList<>() : topicService.getSimilarTopics(keywords);
+            List<Topic> similarTopics = new ArrayList<>();
+            try {
+                similarTopics = (keywords.length == 0) ? new ArrayList<>() : topicService.getSimilarTopics(keywords);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (similarTopics.size() != 0) {
                 request.setAttribute("similarTopics", similarTopics);
-                request.getRequestDispatcher("/WEB-INF/fragments/fragment-similar-post.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.FRAGMENT_SIMILAR_POST).forward(request, response);
             }
         }
 

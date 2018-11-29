@@ -3,6 +3,7 @@ package com.step.forum.job;
 import com.step.forum.model.Topic;
 import com.step.forum.service.TopicService;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,6 +38,12 @@ public class PopularTopicsUpdater {
 
     private void updatePopularTopics() {
         service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(() -> popularTopics = topicService.getPopularTopics(), 0, 20, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(() -> {
+            try {
+                popularTopics = topicService.getPopularTopics();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, 0, 20, TimeUnit.SECONDS);
     }
 }

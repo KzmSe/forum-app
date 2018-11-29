@@ -3,6 +3,7 @@
 
 <c:forEach var="comment" items="${comments}">
 
+
     <div class="post">
         <div class="topwrap">
             <div class="userinfo pull-left">

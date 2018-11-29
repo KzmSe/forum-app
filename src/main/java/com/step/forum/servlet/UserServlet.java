@@ -1,6 +1,7 @@
 package com.step.forum.servlet;
 
 import com.step.forum.constants.MessageConstants;
+import com.step.forum.constants.NavigationConstants;
 import com.step.forum.constants.UserConstants;
 import com.step.forum.dao.UserDaoImpl;
 import com.step.forum.exception.DuplicateEmailException;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +34,7 @@ import java.util.function.Predicate;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/us")
 @MultipartConfig(maxFileSize = 1024 * 1024 * 5,
-                    maxRequestSize = 1024 * 1024 * 5)
+        maxRequestSize = 1024 * 1024 * 5)
 public class UserServlet extends HttpServlet {
 
     private UserService userService = new UserServiceImpl(new UserDaoImpl());
@@ -53,7 +55,7 @@ public class UserServlet extends HttpServlet {
             action = request.getParameter("action");
         }
 
-        if (action.equals("doRegister")) {
+        if (action.equals(NavigationConstants.ACTION_DO_REGISTER)) {
             String firstname = request.getParameter("firstname");
             String lastname = request.getParameter("lastname");
             String email = request.getParameter("email");
@@ -61,9 +63,8 @@ public class UserServlet extends HttpServlet {
             String rePassword = request.getParameter("rePassword");
 
             if (!password.equals(rePassword)) {
-//                response.sendRedirect("/ns?action=register");
-                //TODO: password-lar ferqlidir mesaji gonder..
-                request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_PASSWORDS_MUST_BE_THE_SAME);
+                request.getRequestDispatcher(NavigationConstants.PAGE_NEW_ACCOUNT).forward(request, response);
                 return;
             }
 
@@ -71,7 +72,7 @@ public class UserServlet extends HttpServlet {
             boolean validationResult = ValidationUtil.validate(firstname, lastname, email, password);
             if (!validationResult) {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
-                request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.PAGE_NEW_ACCOUNT).forward(request, response);
             }
 
             //file
@@ -113,47 +114,49 @@ public class UserServlet extends HttpServlet {
             user.setToken(token.toString());
 
             try {
-                if (userService.addUser(user)) {
-                    String body = "Qeydiyyati tamamlamaq ucun linke daxil olun:" + "http://localhost:8080/us?action=activate&token=" + user.getToken();
+                userService.addUser(user);
+                String body = "Qeydiyyati tamamlamaq ucun linke daxil olun:" + "http://localhost:8080/us?action=activate&token=" + user.getToken();
 
-                    //paralel thread for mail sending
-                    ExecutorService service = null;
-                    try {
-                        service = Executors.newFixedThreadPool(20);
-                        service.submit(() -> {
-                            //TODO: mail gonder..
+                //paralel thread for mail sending
+                ExecutorService service = null;
+                try {
+                    service = Executors.newFixedThreadPool(20);
+                    service.submit(() -> {
+                        //TODO: mail gonder..
 //                            EmailUtil.sendEmail(email, "REGISTRATION", body);
-                        });
+                    });
 
-                    } finally {
-                        if (service != null) {
-                            service.shutdown();
-                        }
+                } finally {
+                    if (service != null) {
+                        service.shutdown();
                     }
-
-                    request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_REGISTRATION);
-                    request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
-                } else {
-                    request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
-                    request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
                 }
+
+                request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_REGISTRATION);
+                request.getRequestDispatcher(NavigationConstants.PAGE_LOGIN).forward(request, response);
 
             } catch (DuplicateEmailException e) {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_DUPLICATE_EMAIL);
-                request.getRequestDispatcher("/WEB-INF/view/new-account.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.PAGE_NEW_ACCOUNT).forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
+                request.getRequestDispatcher(NavigationConstants.PAGE_NEW_ACCOUNT).forward(request, response);
             }
 
-        } else if (action.equals("doLogin")) {
+        } else if (action.equals(NavigationConstants.ACTION_DO_LOGIN)) {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
             if (!ValidationUtil.validate(email, password)) {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
-                request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.PAGE_LOGIN).forward(request, response);
             }
 
             try {
-                User user = userService.login(email, CryptoUtil.inputToHash(password));
+                User user = null;
+                user = userService.login(email, CryptoUtil.inputToHash(password));
+
                 if (user != null) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
@@ -162,19 +165,15 @@ public class UserServlet extends HttpServlet {
 
             } catch (InvalidEmailException | InvalidPasswordException | InactiveStatusException e) {
                 request.setAttribute("message", e.getMessage());
-                request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.PAGE_LOGIN).forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
+                request.getRequestDispatcher(NavigationConstants.PAGE_LOGIN).forward(request, response);
             }
-        } else if (action.equals("activate")) {
+        } else if (action.equals(NavigationConstants.ACTION_ACTIVATE)) {
             //TODO: bura yazilmalidir..
-
         }
-
-
-
-
-
-
-
 
 
     }

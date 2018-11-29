@@ -1,6 +1,7 @@
 package com.step.forum.servlet;
 
 import com.step.forum.constants.MessageConstants;
+import com.step.forum.constants.NavigationConstants;
 import com.step.forum.dao.CommentDaoImpl;
 import com.step.forum.dao.TopicDaoImpl;
 import com.step.forum.model.Comment;
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "CommentServlet", urlPatterns = "/cs")
@@ -31,15 +34,11 @@ public class CommentServlet extends HttpServlet {
     private TopicService topicService = new TopicServiceImpl(new TopicDaoImpl());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         processRequest(request, response);
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         processRequest(request, response);
-
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,7 +52,7 @@ public class CommentServlet extends HttpServlet {
             return;
         }
 
-        if (action.equals("addComment")) {
+        if (action.equals(NavigationConstants.ACTION_ADD_COMMENT)) {
             String description = request.getParameter("description");
             LocalDateTime writeDate = LocalDateTime.now();
             //get id user
@@ -75,30 +74,42 @@ public class CommentServlet extends HttpServlet {
             user1.setId(idUser);
             comment.setUser(user1);
 
-            Topic topic1 = topicService.getTopicById(idTopic);
+            Topic topic1 = null;
+            try {
+                topic1 = topicService.getTopicById(idTopic);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             request.setAttribute("topic", topic1);
 
             if (!ValidationUtil.validate(description)) {
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_EMPTY_FIELDS);
-                request.getRequestDispatcher("/WEB-INF/view/topic.jsp").forward(request, response);
+                request.getRequestDispatcher(NavigationConstants.PAGE_TOPIC).forward(request, response);
                 return;
             }
 
-            boolean result = commentService.addComment(comment);
-            if (result) {
+            try {
+                commentService.addComment(comment);
                 request.setAttribute("message", MessageConstants.SUCCESS_MESSAGE_COMMENT_ADDED);
 
-            } else {
+            } catch (SQLException e) {
+                e.printStackTrace();
                 request.setAttribute("message", MessageConstants.ERROR_MESSAGE_INTERNAL_ERROR);
             }
 
-            request.getRequestDispatcher("/WEB-INF/view/topic.jsp").forward(request, response);
+            request.getRequestDispatcher(NavigationConstants.PAGE_TOPIC).forward(request, response);
 
-        } else if (action.equals("getComments")) {
+        } else if (action.equals(NavigationConstants.ACTION_GET_COMMENTS)) {
             int idTopic = Integer.parseInt(request.getParameter("id"));
-            List<Comment> comments = commentService.getCommentsByTopicId(idTopic);
+            List<Comment> comments = new ArrayList<>();
+            try {
+                comments = commentService.getCommentsByTopicId(idTopic);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new ServletException();
+            }
             request.setAttribute("comments", comments);
-            request.getRequestDispatcher("/WEB-INF/fragments/fragment-comments.jsp").forward(request, response);
+            request.getRequestDispatcher(NavigationConstants.FRAGMENT_COMMENTS).forward(request, response);
 
         }
 

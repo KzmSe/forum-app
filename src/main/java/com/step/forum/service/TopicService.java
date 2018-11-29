@@ -2,22 +2,23 @@ package com.step.forum.service;
 
 import com.step.forum.model.Topic;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface TopicService {
 
-    List<Topic> getAllTopic();
+    List<Topic> getAllTopic() throws SQLException;
 
-    Topic getTopicById(int id);
+    Topic getTopicById(int id) throws SQLException;
 
-    boolean incrementTopicViewCount(int id);
+    void incrementTopicViewCount(int id) throws SQLException;
 
-    boolean addTopic(Topic topic);
+    void addTopic(Topic topic) throws SQLException;
 
-    List<Topic> getPopularTopics();
+    List<Topic> getPopularTopics() throws SQLException;
 
-    List<Topic> getAllTopicsByUserId(int id);
+    List<Topic> getAllTopicsByUserId(int id) throws SQLException;
 
-    List<Topic> getSimilarTopics(String[] keywords);
+    List<Topic> getSimilarTopics(String[] keywords) throws SQLException;
 
 }
