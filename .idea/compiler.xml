@@ -6,11 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="step-java-forum-app" />
+        <module name="forum-admin" />
+        <module name="forum-common" />
+        <module name="forum-main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="step-java-forum-app" target="1.8" />
+      <module name="forum-admin" target="1.8" />
+      <module name="forum-app" target="1.5" />
+      <module name="forum-common" target="1.8" />
+      <module name="forum-main" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

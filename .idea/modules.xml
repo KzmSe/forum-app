@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/step-java-forum-app.iml" filepath="$PROJECT_DIR$/step-java-forum-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forum-admin/forum-admin.iml" filepath="$PROJECT_DIR$/forum-admin/forum-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forum-app.iml" filepath="$PROJECT_DIR$/forum-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forum-common/forum-common.iml" filepath="$PROJECT_DIR$/forum-common/forum-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/forum-main/forum-main.iml" filepath="$PROJECT_DIR$/forum-main/forum-main.iml" />
     </modules>
   </component>
 </project>
