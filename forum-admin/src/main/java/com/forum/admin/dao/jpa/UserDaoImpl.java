@@ -11,6 +11,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
@@ -18,9 +19,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User loginUser(String email, String password) throws UserCredentialsException {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
-        User user;
+        Transaction transaction = null;
+        User user = null;
         try{
+            transaction = session.beginTransaction();
             user = session.createQuery("from User where email = :email", User.class)
                     .setParameter("email", email)
                     .uniqueResult();
@@ -39,41 +41,57 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getActiveOrBlockedUsers(int status) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
+        List<User> list = new ArrayList<>();
 
-        List<User> list = session.createQuery("from User u join fetch u.role where u.status = :status", User.class)
-                .setParameter("status", status)
-                .list();
+        try {
+            transaction = session.beginTransaction();
+            list = session.createQuery("from User u join fetch u.role where u.status = :status", User.class)
+                    .setParameter("status", status)
+                    .list();
 
-        HibernateUtil.commitTransaction(transaction);
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return list;
     }
 
     @Override
     public boolean activateUser(int id) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
 
-        session.createQuery("update User set status = :status where id = :id")
-                .setParameter("status", UserConstants.USER_STATUS_ACTIVE)
-                .setParameter("id", id)
-                .executeUpdate();
+        try {
+            transaction = session.beginTransaction();
+            session.createQuery("update User set status = :status where id = :id")
+                    .setParameter("status", UserConstants.USER_STATUS_ACTIVE)
+                    .setParameter("id", id)
+                    .executeUpdate();
 
-        HibernateUtil.commitTransaction(transaction);
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return true;
     }
 
     @Override
     public boolean blockUser(int id) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
 
-        session.createQuery("update User set status = :status where id = :id")
-                .setParameter("status", UserConstants.USER_STATUS_BLOCKED)
-                .setParameter("id", id)
-                .executeUpdate();
+        try {
+            transaction = session.beginTransaction();
+            session.createQuery("update User set status = :status where id = :id")
+                    .setParameter("status", UserConstants.USER_STATUS_BLOCKED)
+                    .setParameter("id", id)
+                    .executeUpdate();
 
-        HibernateUtil.commitTransaction(transaction);
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return true;
     }
 

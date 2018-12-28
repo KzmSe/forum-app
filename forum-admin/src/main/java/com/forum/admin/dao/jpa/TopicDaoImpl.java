@@ -7,6 +7,8 @@ import com.forum.common.constants.TopicConstants;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopicDaoImpl implements TopicDao {
@@ -14,53 +16,76 @@ public class TopicDaoImpl implements TopicDao {
     @Override
     public List<Topic> getActiveOrPendingTopics(int status) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
+        List<Topic> list = new ArrayList<>();
 
-        List<Topic> list = session.createQuery("from Topic where status = :status")
-                .setParameter("status", status)
-                .list();
+        try {
+            transaction = session.beginTransaction();
 
-        HibernateUtil.commitTransaction(transaction);
+            list = session.createQuery("from Topic where status = :status")
+                    .setParameter("status", status)
+                    .list();
+
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return list;
     }
 
     @Override
     public boolean deleteTopic(int id) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
 
-        Topic topic = new Topic();
-        topic.setId(id);
-        session.delete(topic);
+        try {
+            transaction = session.beginTransaction();
+            Topic topic = new Topic();
+            topic.setId(id);
+            session.delete(topic);
 
-        HibernateUtil.commitTransaction(transaction);
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return true;
     }
 
     @Override
     public boolean activateTopic(int id, String title, String desc) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
 
-        session.createQuery("update Topic set title = :title, description = :description, status = :status where id = :id")
-                .setParameter("title", title)
-                .setParameter("status", TopicConstants.TOPIC_STATUS_ACTIVE)
-                .setParameter("description", desc)
-                .setParameter("id", id)
-                .executeUpdate();
+        try {
+            transaction = session.beginTransaction();
+            session.createQuery("update Topic set title = :title, description = :description, status = :status where id = :id")
+                    .setParameter("title", title)
+                    .setParameter("status", TopicConstants.TOPIC_STATUS_ACTIVE)
+                    .setParameter("description", desc)
+                    .setParameter("id", id)
+                    .executeUpdate();
 
-        HibernateUtil.commitTransaction(transaction);
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return true;
     }
 
     @Override
     public Topic getTopicById(int id) {
         Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
+        Topic topic = null;
 
-        Topic topic = session.get(Topic.class, id);
+        try {
+            transaction = session.beginTransaction();
+            topic = session.get(Topic.class, id);
 
-        HibernateUtil.commitTransaction(transaction);
+        } finally {
+            HibernateUtil.commitTransaction(transaction);
+        }
+
         return topic;
     }
 }
